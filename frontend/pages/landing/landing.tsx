@@ -7,8 +7,7 @@ import Pricing from '~/pages/landing/layout/prices';
 import Contact from '~/pages/landing/layout/contact';
 import Footer from '~/pages/landing/layout/footer';
 import Testimonials from '~/pages/landing/layout/testimonials';
-
-import Button from '~/components/ui/button';
+import { Button } from '~/components/ui/button';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,17 +18,16 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Landing() {
   return (
-    <main className='min-h-screen'>
-      {/* <main className='container mx-auto flex min-h-screen items-center justify-center'>
-      <Button>Button test</Button> */}
-
-      <Navbar />
-      <Hero />
-      <Services />
-      <Pricing />
-      <Testimonials />
-      <Contact />
-      <Footer />
+    // <main className='min-h-screen'>
+    // <Navbar />
+    // <Hero />
+    // <Services />
+    // <Pricing />
+    // <Testimonials />
+    // <Contact />
+    // <Footer />
+    <main className='container mx-auto flex min-h-screen items-center justify-center'>
+      <Button>Button test</Button>
     </main>
   );
 }
