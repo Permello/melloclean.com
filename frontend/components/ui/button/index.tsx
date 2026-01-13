@@ -1,10 +1,9 @@
 import React from 'react';
 import type { ButtonProps } from './ts/types';
-import { Btn } from './components/btn';
+import { VariantButton } from './components/variantButton';
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(Btn());
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(VariantButton());
 
-Button.displayName = 'Button';
 export { Button };
 
 // 'bg-emerald-500 text-white',

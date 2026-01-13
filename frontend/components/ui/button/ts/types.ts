@@ -1,7 +1,9 @@
 import type { VariantProps } from 'class-variance-authority';
-import type { buttonVariants } from './variants';
+import type { buttonVariants, loadingVariants } from './variants';
+import type { AriaButtonProps } from 'react-aria';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
-  VariantProps<typeof buttonVariants>;
+  VariantProps<typeof buttonVariants> & { isLoading?: boolean } & AriaButtonProps<'button'>;
 
-export type { ButtonProps };
+type LoadingProps = VariantProps<typeof loadingVariants>;
+export type { ButtonProps, LoadingProps };
