@@ -1,10 +1,8 @@
 import { motion } from 'framer-motion';
-
-import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import { services, colorClasses } from './constants';
 import { Heading } from '~/components/ui/heading';
-
+import { Text } from '~/components/ui/text';
 export default function Services() {
   return (
     <section className='bg-white py-24' id='services'>
@@ -15,12 +13,13 @@ export default function Services() {
           viewport={{ once: true }}
           className='mb-16 text-center'
         >
-          <span className='text-sm font-semibold tracking-wider text-emerald-600 uppercase'>
+          <Text as='em' className='text-sm'>
             Our Services
-          </span>
+          </Text>
           <Heading level={2} className='mt-3 mb-4'>
-            Cleaning Solutions for{' '}
+            Cleaning Solutions for
             <span className='bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent'>
+              {' '}
               Every Need
             </span>
           </Heading>

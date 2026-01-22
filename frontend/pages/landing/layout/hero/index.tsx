@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { Heading } from '~/components/ui/heading';
+import { Text } from '~/components/ui/text';
 // import { createPageUrl } from "@/utils";
 
 export default function Hero() {
@@ -32,15 +33,15 @@ export default function Hero() {
 
             <Heading className='mb-6 leading-tight'>
               A Cleaner Home,
-              <span className='block bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent'>
+              <Text as='span' className='block'>
                 A Happier Life
-              </span>
+              </Text>
             </Heading>
 
-            <p className='mb-8 max-w-lg text-xl leading-relaxed text-slate-600'>
+            <Text className='mb-8 max-w-lg text-xl leading-relaxed'>
               Experience the luxury of a spotless home without lifting a finger. Our expert team
               delivers impeccable results, every time.
-            </p>
+            </Text>
 
             <div className='mb-10 flex flex-wrap gap-4'>
               {benefits.map((benefit, index) => (

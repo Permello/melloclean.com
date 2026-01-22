@@ -1,21 +1,23 @@
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, ArrowRight } from 'lucide-react';
+import { Button } from '~/components/ui/button';
+import { companyConfig } from '~/core/config';
 // import { Button } from "@/components/ui/button";
 // import { Input } from "@/components/ui/input";
 // import { Textarea } from "@/components/ui/textarea";
 
 export default function Contact() {
   const contactInfo = [
-    { icon: Phone, label: 'Call Us', value: '(555) 123-4567' },
-    { icon: Mail, label: 'Email Us', value: 'hello@sparkle.clean' },
-    { icon: MapPin, label: 'Visit Us', value: '123 Clean Street, NY 10001' },
-    { icon: Clock, label: 'Hours', value: 'Mon-Sat: 7AM - 8PM' },
+    { icon: Phone, label: 'Call Us', value: companyConfig.Phone },
+    { icon: Mail, label: 'Email Us', value: companyConfig.Email },
+    { icon: MapPin, label: 'Visit Us', value: companyConfig.Address },
+    { icon: Clock, label: 'Hours', value: companyConfig.Hours },
   ];
 
   return (
     <section className='bg-white py-24' id='contact'>
       <div className='container mx-auto px-6'>
-        <div className='grid items-start gap-16 lg:grid-cols-2'>
+        <div className='flex flex-col items-start gap-16 lg:flex-row'>
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -39,7 +41,7 @@ export default function Contact() {
               {contactInfo.map((item) => (
                 <div
                   key={item.label}
-                  className='flex items-start gap-4 rounded-2xl bg-slate-50 p-4 transition-colors hover:bg-emerald-50'
+                  className='flex max-w-full items-start gap-4 rounded-2xl bg-slate-50 p-4 transition-colors hover:bg-emerald-50'
                 >
                   <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600'>
                     <item.icon className='h-6 w-6' />
@@ -67,7 +69,7 @@ export default function Contact() {
                   <label className='mb-2 block text-sm font-medium text-slate-700'>Name</label>
                   <input
                     placeholder='Your name'
-                    className='h-12 rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
+                    className='block h-12 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm shadow-xs focus:border-2 focus:border-emerald-500 focus:ring-emerald-500 focus:outline-none'
                   />
                 </div>
                 <div>
@@ -75,7 +77,7 @@ export default function Contact() {
                   <input
                     type='email'
                     placeholder='your@email.com'
-                    className='h-12 rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
+                    className='block h-12 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm shadow-xs focus:border-2 focus:border-emerald-500 focus:ring-emerald-500 focus:outline-none'
                   />
                 </div>
               </div>
@@ -85,7 +87,7 @@ export default function Contact() {
                 <input
                   type='tel'
                   placeholder='(555) 000-0000'
-                  className='h-12 rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
+                  className='"block h-12 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm shadow-xs focus:border-2 focus:border-emerald-500 focus:ring-emerald-500 focus:outline-none'
                 />
               </div>
 
@@ -94,14 +96,14 @@ export default function Contact() {
                 <textarea
                   placeholder='Tell us about your cleaning needs...'
                   rows={4}
-                  className='rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
+                  className='block w-full resize-none rounded-xl border border-slate-200 p-3.5 text-sm shadow-xs focus:border-2 focus:border-emerald-500 focus:ring-emerald-500 focus:outline-none'
                 />
               </div>
 
-              <button className='h-12 w-full rounded-xl bg-emerald-600 text-lg font-semibold text-white hover:bg-emerald-700'>
+              <Button className='w-full rounded-xl font-semibold'>
                 Send Message
                 <ArrowRight className='ml-2 h-5 w-5' />
-              </button>
+              </Button>
             </form>
           </motion.div>
         </div>

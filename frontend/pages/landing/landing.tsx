@@ -9,10 +9,11 @@ import Footer from '~/pages/landing/layout/footer';
 import Testimonials from '~/pages/landing/layout/testimonials';
 import { Button } from '~/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { companyConfig } from '~/core/config';
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: 'Mello Cleaning' },
+    { title: companyConfig.Name },
     { name: 'description', content: 'Welcome to React Router!' },
   ];
 }
@@ -41,6 +42,16 @@ export default function Landing() {
     //     </Button>
     //     <Button variant={'secondary'}>Book Now</Button>
     //     <Button variant={'secondary'} size={'large'}>
+    //       Book Now
+    //     </Button>
+    //   </div>
+
+    //   <div className='flex flex-col justify-between gap-6'>
+    //     <Button variant={'ghost'} size={'small'}>
+    //       Book Now
+    //     </Button>
+    //     <Button variant={'ghost'}>Book Now</Button>
+    //     <Button variant={'ghost'} size={'large'}>
     //       Book Now
     //     </Button>
     //   </div>
