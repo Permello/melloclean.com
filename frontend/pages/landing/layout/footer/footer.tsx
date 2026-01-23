@@ -2,7 +2,7 @@ import { Sparkles, Facebook, Instagram, Twitter } from 'lucide-react';
 import { Heading } from '~/components/ui/heading';
 import { companyConfig } from '~/core/config';
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer className='bg-slate-900 py-16 text-white'>
       <div className='container mx-auto px-6'>

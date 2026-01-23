@@ -53,7 +53,7 @@ const plans = [
   },
 ];
 
-export default function Pricing() {
+export function Pricing() {
   return (
     <section className='bg-gradient-to-b from-slate-50 to-white py-24' id='pricing'>
       <div className='container mx-auto px-6'>

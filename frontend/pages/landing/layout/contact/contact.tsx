@@ -2,11 +2,8 @@ import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { companyConfig } from '~/core/config';
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import { Textarea } from "@/components/ui/textarea";
 
-export default function Contact() {
+export function Contact() {
   const contactInfo = [
     { icon: Phone, label: 'Call Us', value: companyConfig.Phone },
     { icon: Mail, label: 'Email Us', value: companyConfig.Email },

@@ -4,9 +4,8 @@ import { Link } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { Heading } from '~/components/ui/heading';
 import { Text } from '~/components/ui/text';
-// import { createPageUrl } from "@/utils";
 
-export default function Hero() {
+export function Hero() {
   const benefits = [
     'Eco-friendly Products',
     'Trained Professionals',

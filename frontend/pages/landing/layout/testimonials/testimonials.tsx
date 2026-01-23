@@ -32,7 +32,7 @@ const testimonials = [
   },
 ];
 
-export default function Testimonials() {
+export function Testimonials() {
   return (
     <section className='relative overflow-hidden bg-emerald-900 py-24'>
       {/* Decorative elements */}

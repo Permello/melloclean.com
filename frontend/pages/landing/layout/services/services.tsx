@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { services, colorClasses } from './constants';
 import { Heading } from '~/components/ui/heading';
 import { Text } from '~/components/ui/text';
-export default function Services() {
+export function Services() {
   return (
     <section className='bg-white py-24' id='services'>
       <div className='container mx-auto px-6'>
