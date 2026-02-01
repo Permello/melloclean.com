@@ -53,7 +53,7 @@ export function Navbar() {
             </div>
 
             <div className='hidden items-center gap-4 md:flex'>
-              <Link to={''}>
+              <Link to={'/login'}>
                 <button className='text-slate-600 hover:text-emerald-600'>Customer Login</button>
               </Link>
               <Link to={''}>
