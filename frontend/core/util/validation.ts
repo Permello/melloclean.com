@@ -10,6 +10,9 @@ export const validators = {
 
   zipCode: (value: string): string | null =>
     !/^\d{5}$/.test(value) ? 'Zip code must be 5 digits' : null,
+
+  confirmPassword: (value: string, password: string): string | null =>
+    value !== password ? 'Passwords do not match' : null,
 };
 
 export type ValidationErrors = Record<string, string>;
