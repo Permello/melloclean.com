@@ -19,7 +19,15 @@ export const circleCompletedClasses = ['bg-emerald-600', 'text-white'];
 export const circlePendingClasses = ['bg-slate-200', 'text-slate-500'];
 
 // Step indicator label classes
-export const labelBaseClasses = ['text-sm', 'mt-2', 'transition-colors', 'duration-300'];
+export const labelBaseClasses = [
+  'text-sm',
+  'mt-2',
+  'transition-colors',
+  'duration-300',
+  'max-w-20',
+  'text-center',
+  'line-clamp-2',
+];
 
 export const labelActiveClasses = ['text-emerald-600', 'font-semibold'];
 

@@ -15,13 +15,13 @@ export function WizardIndicator({ className }: WizardIndicatorProps) {
   };
 
   return (
-    <div className={cn('flex items-center justify-center', className)}>
+    <div className={cn('flex items-stretch justify-center gap-1', className)}>
       {steps.map((step, index) => {
         const status = getStepStatus(index);
         const isCompleted = status === 'completed';
 
         return (
-          <div key={step.id} className='flex items-center'>
+          <div key={step.id} className='flex items-stretch'>
             <div className='flex flex-col items-center'>
               <motion.div
                 className={cn(circleVariants({ status }))}
@@ -52,9 +52,9 @@ export function WizardIndicator({ className }: WizardIndicatorProps) {
                   connectorVariants({
                     status: index < currentStep ? 'completed' : 'pending',
                   }),
-                  'mt-4 self-start',
+                  'self-center',
                 )}
-                style={{ minWidth: '3rem' }}
+                style={{ minWidth: '2rem' }}
               />
             )}
           </div>

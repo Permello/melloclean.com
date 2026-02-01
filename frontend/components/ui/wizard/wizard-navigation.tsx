@@ -19,7 +19,9 @@ export function WizardNavigation({
   };
 
   return (
-    <div className={cn('flex gap-3', isFirstStep ? 'justify-end' : 'justify-between', className)}>
+    <div
+      className={cn('flex gap-3', isFirstStep ? 'justify-center' : 'justify-between', className)}
+    >
       {!isFirstStep && (
         <Button type='button' variant='secondary' onPress={prevStep}>
           {backLabel}
