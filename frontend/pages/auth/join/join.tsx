@@ -106,25 +106,6 @@ const wizardSteps: WizardStepConfig[] = [
         },
       ),
   },
-  {
-    id: 'address 2',
-    name: 'Sersa',
-    validate: (data) =>
-      validateForm(
-        {
-          street: data.street || '',
-          city: data.city || '',
-          state: data.state || '',
-          zipCode: data.zipCode || '',
-        },
-        {
-          street: [(v) => validators.required(v, 'Street address')],
-          city: [(v) => validators.required(v, 'City')],
-          state: [(v) => validators.required(v, 'State')],
-          zipCode: [(v) => validators.required(v, 'Zip code'), validators.zipCode],
-        },
-      ),
-  },
 ];
 
 function WizardFormContent() {
@@ -201,51 +182,6 @@ function WizardFormContent() {
       </WizardStep>
 
       <WizardStep id='address'>
-        <div className='space-y-4'>
-          <Input
-            name='street'
-            label='Street Address'
-            placeholder='123 Main St'
-            autoComplete='street-address'
-            value={formData.street || ''}
-            onChange={(value) => handleInputChange('street', value)}
-            error={combinedErrors?.street}
-          />
-
-          <div className='grid grid-cols-2 gap-4'>
-            <Input
-              name='city'
-              label='City'
-              placeholder='Houston'
-              autoComplete='address-level2'
-              value={formData.city || ''}
-              onChange={(value) => handleInputChange('city', value)}
-              error={combinedErrors?.city}
-            />
-            <Input
-              name='state'
-              label='State'
-              placeholder='TX'
-              autoComplete='address-level1'
-              value={formData.state || ''}
-              onChange={(value) => handleInputChange('state', value)}
-              error={combinedErrors?.state}
-            />
-          </div>
-
-          <Input
-            name='zipCode'
-            label='Zip Code'
-            placeholder='77001'
-            autoComplete='postal-code'
-            value={formData.zipCode || ''}
-            onChange={(value) => handleInputChange('zipCode', value)}
-            error={combinedErrors?.zipCode}
-          />
-        </div>
-      </WizardStep>
-
-      <WizardStep id='address 2'>
         <div className='space-y-4'>
           <Input
             name='street'
