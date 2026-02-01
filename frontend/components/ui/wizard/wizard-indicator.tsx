@@ -52,7 +52,7 @@ export function WizardIndicator({ className }: WizardIndicatorProps) {
                   connectorVariants({
                     status: index < currentStep ? 'completed' : 'pending',
                   }),
-                  'self-start mt-4'
+                  'mt-4 self-start',
                 )}
                 style={{ minWidth: '3rem' }}
               />

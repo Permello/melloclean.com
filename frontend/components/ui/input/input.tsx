@@ -7,16 +7,7 @@ import { mergeRefs } from '~/core/util/mergeRef';
 import { Eye, EyeOff } from 'lucide-react';
 
 const Input: React.FC<InputProps> = (props: InputProps) => {
-  const {
-    className,
-    variant,
-    label,
-    error,
-    hint,
-    type,
-    ref,
-    ...rest
-  } = props;
+  const { className, variant, label, error, hint, type, ref, ...rest } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
   const { labelProps, inputProps, errorMessageProps, descriptionProps } = useTextField(
@@ -28,7 +19,7 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
       description: hint,
       isInvalid: !!error,
     },
-    inputRef
+    inputRef,
   );
 
   const [showPassword, setShowPassword] = useState(false);
@@ -38,40 +29,28 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
   const inputClasses = cn(
     inputVariants({ variant: error ? 'error' : variant }),
     isPassword && 'pr-12',
-    className
+    className,
   );
   const mRef = mergeRefs([ref, inputRef]);
 
   return (
     <div className='flex flex-col gap-1.5'>
       {label && (
-        <label
-          {...labelProps}
-          className='text-sm font-medium text-slate-700'
-        >
+        <label {...labelProps} className='text-sm font-medium text-slate-700'>
           {label}
         </label>
       )}
       <div className='relative'>
-        <input
-          ref={mRef}
-          className={inputClasses}
-          {...inputProps}
-          type={inputType}
-        />
+        <input ref={mRef} className={inputClasses} {...inputProps} type={inputType} />
         {isPassword && (
           <button
             type='button'
             onClick={() => setShowPassword(!showPassword)}
-            className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors'
+            className='absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-600'
             tabIndex={-1}
             aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
-            {showPassword ? (
-              <EyeOff className='h-5 w-5' />
-            ) : (
-              <Eye className='h-5 w-5' />
-            )}
+            {showPassword ? <EyeOff className='h-5 w-5' /> : <Eye className='h-5 w-5' />}
           </button>
         )}
       </div>

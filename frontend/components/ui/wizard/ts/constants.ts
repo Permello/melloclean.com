@@ -12,41 +12,20 @@ export const circleBaseClasses = [
   'duration-300',
 ];
 
-export const circleActiveClasses = [
-  'bg-emerald-600',
-  'text-white',
-];
+export const circleActiveClasses = ['bg-emerald-600', 'text-white'];
 
-export const circleCompletedClasses = [
-  'bg-emerald-600',
-  'text-white',
-];
+export const circleCompletedClasses = ['bg-emerald-600', 'text-white'];
 
-export const circlePendingClasses = [
-  'bg-slate-200',
-  'text-slate-500',
-];
+export const circlePendingClasses = ['bg-slate-200', 'text-slate-500'];
 
 // Step indicator label classes
-export const labelBaseClasses = [
-  'text-sm',
-  'mt-2',
-  'transition-colors',
-  'duration-300',
-];
+export const labelBaseClasses = ['text-sm', 'mt-2', 'transition-colors', 'duration-300'];
 
-export const labelActiveClasses = [
-  'text-emerald-600',
-  'font-semibold',
-];
+export const labelActiveClasses = ['text-emerald-600', 'font-semibold'];
 
-export const labelCompletedClasses = [
-  'text-emerald-600',
-];
+export const labelCompletedClasses = ['text-emerald-600'];
 
-export const labelPendingClasses = [
-  'text-slate-400',
-];
+export const labelPendingClasses = ['text-slate-400'];
 
 // Connector line classes
 export const connectorBaseClasses = [
@@ -57,10 +36,6 @@ export const connectorBaseClasses = [
   'duration-300',
 ];
 
-export const connectorCompletedClasses = [
-  'bg-emerald-600',
-];
+export const connectorCompletedClasses = ['bg-emerald-600'];
 
-export const connectorPendingClasses = [
-  'bg-slate-200',
-];
+export const connectorPendingClasses = ['bg-slate-200'];

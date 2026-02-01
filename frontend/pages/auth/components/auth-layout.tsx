@@ -14,27 +14,23 @@ interface AuthLayoutProps {
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) => {
   return (
-    <div className='min-h-screen bg-slate-50 flex items-center justify-center p-4'>
+    <div className='flex min-h-screen items-center justify-center bg-slate-50 p-4'>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         className='w-full max-w-md'
       >
-        <div className='bg-white rounded-2xl shadow-xl p-8'>
-          <div className='flex flex-col items-center mb-8'>
-            <Link to='/' className='flex items-center gap-2 mb-4'>
-              <div className='flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600'>
+        <div className='rounded-2xl bg-white p-8 shadow-xl'>
+          <div className='mb-8 flex flex-col items-center'>
+            <Link to='/' className='mb-4 flex items-center gap-2'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600'>
                 <Sparkles className='h-5 w-5 text-white' />
               </div>
-              <span className='text-xl font-bold text-slate-900'>
-                {companyConfig.Name}
-              </span>
+              <span className='text-xl font-bold text-slate-900'>{companyConfig.Name}</span>
             </Link>
             <Heading level={4}>{title}</Heading>
-            {subtitle && (
-              <Text className='mt-1 text-center'>{subtitle}</Text>
-            )}
+            {subtitle && <Text className='mt-1 text-center'>{subtitle}</Text>}
           </div>
           {children}
         </div>

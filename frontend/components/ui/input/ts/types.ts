@@ -11,8 +11,6 @@ interface InputBehaviorProps {
   className?: string;
 }
 
-type InputProps = VariantProps<typeof inputVariants> &
-  InputBehaviorProps &
-  AriaTextFieldProps;
+type InputProps = VariantProps<typeof inputVariants> & InputBehaviorProps & AriaTextFieldProps;
 
 export type { InputProps };

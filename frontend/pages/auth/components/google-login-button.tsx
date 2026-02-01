@@ -28,7 +28,7 @@ const GoogleLoginButton: React.FC = () => {
     <button
       type='button'
       onClick={() => addToast('Google login coming soon', 'info')}
-      className='w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition-colors text-slate-700 font-medium'
+      className='flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 font-medium text-slate-700 transition-colors hover:bg-slate-50'
     >
       <GoogleIcon className='h-5 w-5' />
       Continue with Google

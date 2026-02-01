@@ -20,18 +20,23 @@ interface ActionData {
   success?: boolean;
 }
 
+type SignupFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+};
+
 export async function action({ request }: Route.ActionArgs): Promise<ActionData> {
   const formData = await request.formData();
-  const firstName = formData.get('firstName') as string;
-  const lastName = formData.get('lastName') as string;
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const confirmPassword = formData.get('confirmPassword') as string;
-  const street = formData.get('street') as string;
-  const city = formData.get('city') as string;
-  const state = formData.get('state') as string;
-  const zipCode = formData.get('zipCode') as string;
 
+  const { firstName, lastName, email, password, confirmPassword, street, city, state, zipCode } =
+    Object.fromEntries(formData.entries()) as SignupFormData;
   const errors = validateForm(
     { firstName, lastName, email, password, confirmPassword, street, city, state, zipCode },
     {
@@ -47,7 +52,7 @@ export async function action({ request }: Route.ActionArgs): Promise<ActionData>
       city: [(v) => validators.required(v, 'City')],
       state: [(v) => validators.required(v, 'State')],
       zipCode: [(v) => validators.required(v, 'Zip code'), validators.zipCode],
-    }
+    },
   );
 
   if (Object.keys(errors).length > 0) {
@@ -79,7 +84,7 @@ const wizardSteps: WizardStepConfig[] = [
             (v) => validators.required(v, 'Confirm password'),
             (v) => validators.confirmPassword(v, data.password || ''),
           ],
-        }
+        },
       ),
   },
   {
@@ -98,7 +103,7 @@ const wizardSteps: WizardStepConfig[] = [
           city: [(v) => validators.required(v, 'City')],
           state: [(v) => validators.required(v, 'State')],
           zipCode: [(v) => validators.required(v, 'Zip code'), validators.zipCode],
-        }
+        },
       ),
   },
 ];
@@ -226,7 +231,11 @@ function WizardFormContent() {
         <input key={key} type='hidden' name={key} value={value} />
       ))}
 
-      <WizardNavigation isSubmitting={isSubmitting} completeLabel='Create Account' className='mt-6' />
+      <WizardNavigation
+        isSubmitting={isSubmitting}
+        completeLabel='Create Account'
+        className='mt-6'
+      />
     </>
   );
 }

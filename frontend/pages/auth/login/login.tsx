@@ -21,15 +21,9 @@ export async function action({ request }: Route.ActionArgs): Promise<ActionData>
   const errors = validateForm(
     { email, password },
     {
-      email: [
-        (v) => validators.required(v, 'Email'),
-        validators.email,
-      ],
-      password: [
-        (v) => validators.required(v, 'Password'),
-        (v) => validators.minLength(v, 8),
-      ],
-    }
+      email: [(v) => validators.required(v, 'Email'), validators.email],
+      password: [(v) => validators.required(v, 'Password'), (v) => validators.minLength(v, 8)],
+    },
   );
 
   if (Object.keys(errors).length > 0) {
@@ -64,12 +58,7 @@ export default function LoginPage() {
           error={actionData?.errors?.password}
         />
 
-        <Button
-          type='submit'
-          disabled={isSubmitting}
-          isLoading={isSubmitting}
-          className='w-full'
-        >
+        <Button type='submit' disabled={isSubmitting} isLoading={isSubmitting} className='w-full'>
           Sign In
         </Button>
       </Form>
@@ -87,7 +76,7 @@ export default function LoginPage() {
 
       <Text className='mt-6 text-center text-sm'>
         Don&apos;t have an account?{' '}
-        <Link to='/join' className='text-emerald-600 hover:text-emerald-700 font-medium'>
+        <Link to='/join' className='font-medium text-emerald-600 hover:text-emerald-700'>
           Create one
         </Link>
       </Text>

@@ -19,7 +19,7 @@ export type ValidationErrors = Record<string, string>;
 
 export function validateForm<T extends Record<string, string>>(
   data: T,
-  rules: Record<keyof T, ((value: string) => string | null)[]>
+  rules: Record<keyof T, ((value: string) => string | null)[]>,
 ): ValidationErrors {
   const errors: ValidationErrors = {};
 

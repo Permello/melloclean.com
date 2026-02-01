@@ -11,13 +11,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   hint,
   ...props
 }) => {
-  return (
-    <Input
-      {...props}
-      type='password'
-      hint={showRequirements ? 'Min 8 characters' : hint}
-    />
-  );
+  return <Input {...props} type='password' hint={showRequirements ? 'Min 8 characters' : hint} />;
 };
 
 export { PasswordInput };

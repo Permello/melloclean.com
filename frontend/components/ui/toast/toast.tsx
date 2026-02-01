@@ -28,7 +28,7 @@ const Toast: React.FC<ToastProps> = ({ message, variant = 'info', onClose }) => 
       <p className='flex-1 text-sm font-medium'>{message}</p>
       <button
         onClick={onClose}
-        className='flex-shrink-0 rounded-full p-1 hover:bg-black/10 transition-colors'
+        className='flex-shrink-0 rounded-full p-1 transition-colors hover:bg-black/10'
         aria-label='Close notification'
       >
         <X className='h-4 w-4' />
