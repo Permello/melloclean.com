@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import {
   isRouteErrorResponse,
   Links,
@@ -8,7 +13,8 @@ import {
 } from 'react-router';
 
 import type { Route } from './+types/root';
-import './app.css';
+import './core/theme/app.css';
+import { ToastProvider } from '~/components/ui/toast';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -42,7 +48,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <ToastProvider>
+      <Outlet />
+    </ToastProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
