@@ -1,8 +1,19 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { companyConfig } from '~/core/config';
 
+/**
+ * Contact section with company info and message form.
+ * Displays phone, email, address, and hours with a contact form.
+ *
+ * @returns Contact section component
+ */
 export function Contact() {
   const contactInfo = [
     { icon: Phone, label: 'Call Us', value: companyConfig.Phone },

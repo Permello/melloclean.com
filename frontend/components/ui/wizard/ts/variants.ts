@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { cva } from 'class-variance-authority';
 import {
   circleBaseClasses,
@@ -13,6 +18,9 @@ import {
   connectorPendingClasses,
 } from './constants';
 
+/**
+ * CVA variant configuration for step indicator circles.
+ */
 export const circleVariants = cva(circleBaseClasses, {
   variants: {
     status: {
@@ -26,6 +34,9 @@ export const circleVariants = cva(circleBaseClasses, {
   },
 });
 
+/**
+ * CVA variant configuration for step indicator labels.
+ */
 export const labelVariants = cva(labelBaseClasses, {
   variants: {
     status: {
@@ -39,6 +50,9 @@ export const labelVariants = cva(labelBaseClasses, {
   },
 });
 
+/**
+ * CVA variant configuration for step connector lines.
+ */
 export const connectorVariants = cva(connectorBaseClasses, {
   variants: {
     status: {

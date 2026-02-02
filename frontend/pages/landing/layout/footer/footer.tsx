@@ -1,7 +1,18 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { Sparkles, Facebook, Instagram, Twitter } from 'lucide-react';
 import { Heading } from '~/components/ui/heading';
 import { companyConfig } from '~/core/config';
 
+/**
+ * Site footer with company info, navigation links, and social media.
+ * Includes services list, company links, and copyright notice.
+ *
+ * @returns Footer component
+ */
 export function Footer() {
   return (
     <footer className='bg-slate-900 py-16 text-white'>

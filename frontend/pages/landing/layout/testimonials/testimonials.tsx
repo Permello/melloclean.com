@@ -1,7 +1,15 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Quote } from 'lucide-react';
 
+/**
+ * Customer testimonial data.
+ */
 const testimonials = [
   {
     name: 'Sarah Mitchell',
@@ -32,6 +40,12 @@ const testimonials = [
   },
 ];
 
+/**
+ * Testimonials section displaying customer reviews.
+ * Features animated cards with ratings, quotes, and customer photos.
+ *
+ * @returns Testimonials section component
+ */
 export function Testimonials() {
   return (
     <section className='relative overflow-hidden bg-emerald-900 py-24'>

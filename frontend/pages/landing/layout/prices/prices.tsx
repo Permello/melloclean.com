@@ -1,10 +1,16 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { motion } from 'framer-motion';
 import { Check, Star } from 'lucide-react';
-// import { Button } from "@/components/ui/button";
 import { Link } from 'react-router';
 import { Button } from '~/components/ui/button';
-// import { createPageUrl } from "@/utils";
 
+/**
+ * Pricing plan configurations.
+ */
 const plans = [
   {
     name: 'Essential',
@@ -53,6 +59,12 @@ const plans = [
   },
 ];
 
+/**
+ * Pricing section displaying available service plans.
+ * Features three tiers with the middle option highlighted as popular.
+ *
+ * @returns Pricing section component
+ */
 export function Pricing() {
   return (
     <section className='bg-gradient-to-b from-slate-50 to-white py-24' id='pricing'>

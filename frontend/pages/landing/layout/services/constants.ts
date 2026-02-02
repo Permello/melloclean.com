@@ -1,5 +1,13 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { Home, Building2, Truck, Sparkles, ArrowRight } from 'lucide-react';
 
+/**
+ * Service offerings displayed on the landing page.
+ */
 const services: ServiceOption[] = [
   {
     icon: Home,
@@ -38,6 +46,9 @@ const services: ServiceOption[] = [
   },
 ];
 
+/**
+ * Tailwind class mappings for each color variant.
+ */
 const colorClasses: Record<Color, ColorClassesOptions> = {
   emerald: {
     bg: 'bg-emerald-50',

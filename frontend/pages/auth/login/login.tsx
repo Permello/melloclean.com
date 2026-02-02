@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { Form, Link, useActionData, useNavigation } from 'react-router';
 import type { Route } from './+types/login';
 import { AuthLayout } from '../components/auth-layout';
@@ -8,11 +13,23 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 import { validators, validateForm, type ValidationErrors } from '~/core/util/validation';
 
+/**
+ * Response data from the login action.
+ */
 interface ActionData {
+  /** Validation errors by field name */
   errors?: ValidationErrors;
+  /** Whether login was successful */
   success?: boolean;
 }
 
+/**
+ * Server action to handle login form submission.
+ * Validates email and password fields.
+ *
+ * @param args - Route action arguments
+ * @returns Action response with errors or success status
+ */
 export async function action({ request }: Route.ActionArgs): Promise<ActionData> {
   const formData = await request.formData();
   const email = formData.get('email') as string;
@@ -33,6 +50,11 @@ export async function action({ request }: Route.ActionArgs): Promise<ActionData>
   return { success: true };
 }
 
+/**
+ * Login page component with email/password form and social login options.
+ *
+ * @returns Login page with form and social buttons
+ */
 export default function LoginPage() {
   const actionData = useActionData<ActionData>();
   const navigation = useNavigation();

@@ -1,3 +1,11 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
+/**
+ * Base Tailwind classes applied to all button variants.
+ */
 export const baseClasses = [
   'inline-flex',
   'items-center',
@@ -12,6 +20,9 @@ export const baseClasses = [
   'outline-none',
   'font-semibold',
 ];
+/**
+ * Tailwind classes for the primary button variant.
+ */
 export const primaryClasses = [
   'bg-emerald-600',
   'text-white',
@@ -25,6 +36,9 @@ export const primaryClasses = [
   'data-[focus-visible=true]:ring-2',
   'data-[focus-visible=true]:ring-offset-2',
 ];
+/**
+ * Tailwind classes for the secondary button variant.
+ */
 export const secondaryClasses = [
   'bg-gray-50',
   'disabled:bg-gray-50',
@@ -38,6 +52,9 @@ export const secondaryClasses = [
   'data-[focus-visible=true]:ring-2',
   'data-[focus-visible=true]:ring-offset-2',
 ];
+/**
+ * Tailwind classes for the destructive button variant.
+ */
 export const destructiveClasses = [
   'bg-red-500',
   'data-[hovered=true]:bg-red-600',
@@ -52,6 +69,9 @@ export const destructiveClasses = [
   'data-[focus-visible=true]:ring-2',
   'data-[focus-visible=true]:ring-offset-2',
 ];
+/**
+ * Tailwind classes for the ghost button variant.
+ */
 export const ghostClasses = [
   'text-emerald-500',
   'disabled:text-gray-950',
@@ -66,6 +86,9 @@ export const ghostClasses = [
   'data-[focus-visible=true]:ring-2',
   'data-[focus-visible=true]:ring-offset-2',
 ];
+/**
+ * Tailwind classes for the link button variant.
+ */
 export const linkClasses = [
   'font-light',
   'text-emerald-500',
@@ -76,6 +99,9 @@ export const linkClasses = [
   'data-[focus-visible=true]:ring-emerald-500/30',
   'data-[focus-visible=true]:ring-1',
 ];
+/** Tailwind classes for small button size. */
 export const smallClasses = ['text-sm', 'py-2', 'px-6'];
+/** Tailwind classes for default button size. */
 export const defualtClasses = ['text-lg', 'py-3', 'px-8'];
+/** Tailwind classes for large button size. */
 export const largeClasses = ['text-lg', 'py-4', 'px-12'];

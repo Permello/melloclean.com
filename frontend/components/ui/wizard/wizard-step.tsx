@@ -1,8 +1,22 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '~/core/util/cn';
 import { useWizard } from './wizard-context';
 import type { WizardStepProps } from './ts/types';
 
+/**
+ * Container for a single wizard step with animated transitions.
+ * Only renders when the step is active.
+ *
+ * @param props - Component props
+ * @param props.id - Step identifier matching the wizard configuration
+ * @param props.children - Step content
+ * @returns Animated step container or null if not active
+ */
 export function WizardStep({ id, children, className }: WizardStepProps) {
   const { steps, currentStep } = useWizard();
 

@@ -1,3 +1,11 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
+/**
+ * Base Tailwind classes applied to all input variants.
+ */
 export const baseClasses = [
   'w-full',
   'rounded-lg',
@@ -15,6 +23,9 @@ export const baseClasses = [
   'disabled:text-slate-500',
 ];
 
+/**
+ * Tailwind classes for the default input variant.
+ */
 export const defaultClasses = [
   'border-slate-300',
   'bg-white',
@@ -23,6 +34,9 @@ export const defaultClasses = [
   'focus:ring-emerald-500/20',
 ];
 
+/**
+ * Tailwind classes for the error input variant.
+ */
 export const errorClasses = [
   'border-red-500',
   'bg-white',

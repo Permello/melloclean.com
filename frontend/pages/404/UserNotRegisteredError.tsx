@@ -1,5 +1,16 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import React from 'react';
 
+/**
+ * Error page displayed when a user is not registered in the system.
+ * Provides guidance on how to request access.
+ *
+ * @returns Access restricted error page
+ */
 const UserNotRegisteredError = () => {
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-white to-slate-50'>

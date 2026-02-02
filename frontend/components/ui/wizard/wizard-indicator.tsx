@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { cn } from '~/core/util/cn';
@@ -5,6 +10,14 @@ import { useWizard } from './wizard-context';
 import { circleVariants, labelVariants, connectorVariants } from './ts/variants';
 import type { WizardIndicatorProps } from './ts/types';
 
+/**
+ * Calculates the visible range of steps for pagination.
+ *
+ * @param total - Total number of steps
+ * @param current - Current step index
+ * @param max - Maximum visible steps
+ * @returns Start and end indices for visible steps
+ */
 const getVisibleRange = (total: number, current: number, max: number) => {
   if (total <= max) return { start: 0, end: total };
 
@@ -18,6 +31,15 @@ const getVisibleRange = (total: number, current: number, max: number) => {
   return { start: current - max + 2, end: current + 2 };
 };
 
+/**
+ * Visual step indicator showing progress through the wizard.
+ * Displays numbered circles with labels and connecting lines.
+ * Supports pagination for wizards with many steps.
+ *
+ * @param props - Component props
+ * @param props.maxVisibleSteps - Maximum steps shown at once
+ * @returns Step indicator component
+ */
 export function WizardIndicator({ className, maxVisibleSteps = 3 }: WizardIndicatorProps) {
   const { steps, currentStep } = useWizard();
 
@@ -33,12 +55,12 @@ export function WizardIndicator({ className, maxVisibleSteps = 3 }: WizardIndica
   return (
     <div className={cn('relative', className)}>
       {start > 0 && (
-        <div className="absolute left-0 top-0 h-full w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
+        <div className='pointer-events-none absolute top-0 left-0 z-10 h-full w-8 bg-gradient-to-r from-white to-transparent' />
       )}
       {end < steps.length && (
-        <div className="absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+        <div className='pointer-events-none absolute top-0 right-0 z-10 h-full w-8 bg-gradient-to-l from-white to-transparent' />
       )}
-      <div className="flex items-stretch justify-center gap-1 overflow-hidden">
+      <div className='flex items-stretch justify-center gap-1 overflow-hidden'>
         {visibleSteps.map((step, visibleIndex) => {
           const actualIndex = start + visibleIndex;
           const status = getStepStatus(actualIndex);

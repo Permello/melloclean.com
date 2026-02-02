@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import React, { useRef } from 'react';
 import { useToast } from '@react-aria/toast';
 import { motion } from 'framer-motion';
@@ -6,6 +11,9 @@ import { cn } from '~/core/util/cn';
 import { toastVariants } from './ts/variants';
 import type { ToastProps } from './ts/types';
 
+/**
+ * Icon mapping for each toast variant.
+ */
 const icons = {
   success: CheckCircle,
   error: AlertCircle,
@@ -13,6 +21,15 @@ const icons = {
   info: Info,
 };
 
+/**
+ * Individual toast notification component with animated enter/exit.
+ * Displays an icon, message, and close button based on the variant.
+ *
+ * @param props - Component props
+ * @param props.toast - The queued toast data
+ * @param props.state - Toast state for managing the queue
+ * @returns Rendered toast notification
+ */
 const Toast: React.FC<ToastProps> = ({ toast, state }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { toastProps, titleProps, closeButtonProps } = useToast({ toast }, state, ref);
@@ -40,6 +57,7 @@ const Toast: React.FC<ToastProps> = ({ toast, state }) => {
       </p>
       <button
         {...closeButtonProps}
+        onClick={() => state.close(toast.key)}
         className='flex-shrink-0 rounded-full p-1 transition-colors hover:bg-black/10'
       >
         <X className='h-4 w-4' />

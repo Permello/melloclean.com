@@ -1,5 +1,14 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { cva } from 'class-variance-authority';
 
+/**
+ * CVA variant configuration for the Text component.
+ * Defines styles for different text element types (p, span, em, strong).
+ */
 export const TextVariants = cva('', {
   variants: {
     as: {

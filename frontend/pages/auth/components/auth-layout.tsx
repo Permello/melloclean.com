@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
@@ -6,12 +11,25 @@ import { Link } from 'react-router';
 import { Heading } from '~/components/ui/heading';
 import { Text } from '~/components/ui/text';
 
+/**
+ * Props for the AuthLayout component.
+ */
 interface AuthLayoutProps {
+  /** Content to render inside the layout */
   children: React.ReactNode;
+  /** Page title displayed in the header */
   title: string;
+  /** Optional subtitle displayed below the title */
   subtitle?: string;
 }
 
+/**
+ * Layout wrapper for authentication pages with decorative background.
+ * Includes company branding, animated card, and gradient background.
+ *
+ * @param props - Component props
+ * @returns Centered card layout with decorative elements
+ */
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) => {
   return (
     <div className='relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-white p-4'>

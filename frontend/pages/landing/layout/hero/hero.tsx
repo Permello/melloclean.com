@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router';
@@ -5,6 +10,12 @@ import { Button } from '~/components/ui/button';
 import { Heading } from '~/components/ui/heading';
 import { Text } from '~/components/ui/text';
 
+/**
+ * Hero section with headline, benefits, and call-to-action buttons.
+ * Features animated content and decorative background elements.
+ *
+ * @returns Hero section component
+ */
 export function Hero() {
   const benefits = [
     'Eco-friendly Products',

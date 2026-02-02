@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { cva } from 'class-variance-authority';
 import {
   baseClasses,
@@ -11,6 +16,10 @@ import {
   largeClasses,
 } from './constants';
 
+/**
+ * CVA variant configuration for the Button component.
+ * Defines variant and size options with their corresponding styles.
+ */
 const buttonVariants = cva(baseClasses, {
   variants: {
     variant: {
@@ -32,6 +41,10 @@ const buttonVariants = cva(baseClasses, {
   },
 });
 
+/**
+ * CVA variant configuration for the loading spinner.
+ * Defines border colors that match each button variant.
+ */
 const loadingVariants = cva(['absolute', 'inline-flex', 'items-center'], {
   variants: {
     variant: {

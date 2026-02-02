@@ -1,5 +1,17 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { useToast } from '~/components/ui/toast';
 
+/**
+ * Google brand icon SVG component.
+ *
+ * @param props - Component props
+ * @param props.className - CSS classes for sizing
+ * @returns Google logo SVG
+ */
 const GoogleIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox='0 0 24 24'>
     <path
@@ -21,6 +33,12 @@ const GoogleIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
+/**
+ * Google OAuth login button.
+ * Currently displays a placeholder toast notification.
+ *
+ * @returns Styled Google login button
+ */
 const GoogleLoginButton: React.FC = () => {
   const { addToast } = useToast();
 

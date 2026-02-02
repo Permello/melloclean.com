@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { useState, useEffect } from 'react';
 import { Sparkles, Menu, X } from 'lucide-react';
 import { Link } from 'react-router';
@@ -5,6 +10,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '~/components/ui/button';
 import { companyConfig } from '~/core/config';
 
+/**
+ * Navigation bar with responsive mobile menu.
+ * Features scroll-based styling changes and animated mobile menu.
+ *
+ * @returns Navbar component with desktop and mobile views
+ */
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);

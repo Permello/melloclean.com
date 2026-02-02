@@ -1,9 +1,23 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import type { WizardContextValue, WizardStepConfig } from './ts/types';
 import type { ValidationErrors } from '~/core/util/validation';
 
+/**
+ * React context for wizard state and actions.
+ */
 const WizardContext = createContext<WizardContextValue | null>(null);
 
+/**
+ * Hook to access wizard context from child components.
+ *
+ * @throws Error if used outside of WizardProvider
+ * @returns Wizard context value with state and actions
+ */
 export function useWizard(): WizardContextValue {
   const context = useContext(WizardContext);
   if (!context) {
@@ -12,11 +26,22 @@ export function useWizard(): WizardContextValue {
   return context;
 }
 
+/**
+ * Props for the WizardProvider component.
+ */
 interface WizardProviderProps {
+  /** Step configurations */
   steps: WizardStepConfig[];
+  /** Child components */
   children: ReactNode;
 }
 
+/**
+ * Provider component that manages wizard state and provides context to children.
+ *
+ * @param props - Component props
+ * @returns Provider wrapping children with wizard context
+ */
 export function WizardProvider({ steps, children }: WizardProviderProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<Record<string, string>>({});

@@ -1,8 +1,20 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { services, colorClasses } from './constants';
 import { Heading } from '~/components/ui/heading';
 import { Text } from '~/components/ui/text';
+
+/**
+ * Services section displaying available cleaning service offerings.
+ * Renders a grid of animated service cards with features and pricing.
+ *
+ * @returns Services section component
+ */
 export function Services() {
   return (
     <section className='bg-white py-24' id='services'>

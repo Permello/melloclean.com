@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import { Form, Link, useActionData, useNavigation } from 'react-router';
 import type { Route } from './+types/join';
 import { AuthLayout } from '../components/auth-layout';
@@ -14,12 +19,21 @@ import {
   type WizardStepConfig,
 } from '~/components/ui/wizard';
 import { validators, validateForm, type ValidationErrors } from '~/core/util/validation';
+import { useId } from 'react';
 
+/**
+ * Response data from the signup action.
+ */
 interface ActionData {
+  /** Validation errors by field name */
   errors?: ValidationErrors;
+  /** Whether signup was successful */
   success?: boolean;
 }
 
+/**
+ * Form data structure for the signup wizard.
+ */
 type SignupFormData = {
   firstName: string;
   lastName: string;
@@ -32,6 +46,13 @@ type SignupFormData = {
   zipCode: string;
 };
 
+/**
+ * Server action to handle signup form submission.
+ * Processes the completed wizard form data.
+ *
+ * @param args - Route action arguments
+ * @returns Action response with success status
+ */
 export async function action({ request }: Route.ActionArgs): Promise<ActionData> {
   const formData = await request.formData();
   const data = Object.fromEntries(formData.entries()) as SignupFormData;
@@ -43,6 +64,9 @@ export async function action({ request }: Route.ActionArgs): Promise<ActionData>
   return { success: true };
 }
 
+/**
+ * Wizard step configurations with validation rules.
+ */
 const wizardSteps: WizardStepConfig[] = [
   {
     id: 'account',
@@ -87,51 +111,19 @@ const wizardSteps: WizardStepConfig[] = [
         },
       ),
   },
-
-  {
-    id: 'address 2',
-    name: 'Service Address 2',
-    validate: (data) =>
-      validateForm(
-        {
-          street: data.street || '',
-          city: data.city || '',
-          state: data.state || '',
-          zipCode: data.zipCode || '',
-        },
-        {
-          street: [(v) => validators.required(v, 'Street address')],
-          city: [(v) => validators.required(v, 'City')],
-          state: [(v) => validators.required(v, 'State')],
-          zipCode: [(v) => validators.required(v, 'Zip code'), validators.zipCode],
-        },
-      ),
-  },
-  {
-    id: 'address 3',
-    name: 'Service Address 3',
-    validate: (data) =>
-      validateForm(
-        {
-          street: data.street || '',
-          city: data.city || '',
-          state: data.state || '',
-          zipCode: data.zipCode || '',
-        },
-        {
-          street: [(v) => validators.required(v, 'Street address')],
-          city: [(v) => validators.required(v, 'City')],
-          state: [(v) => validators.required(v, 'State')],
-          zipCode: [(v) => validators.required(v, 'Zip code'), validators.zipCode],
-        },
-      ),
-  },
 ];
 
+/**
+ * Internal component containing the wizard form fields.
+ * Manages form state and renders step content.
+ *
+ * @returns Wizard form with indicator, steps, and navigation
+ */
 function WizardFormContent() {
   const { errors, formData, updateFormData } = useWizard();
   const actionData = useActionData<ActionData>();
   const navigation = useNavigation();
+  const id = useId();
   const isSubmitting = navigation.state === 'submitting';
 
   const combinedErrors = { ...errors, ...actionData?.errors };
@@ -350,6 +342,12 @@ function WizardFormContent() {
   );
 }
 
+/**
+ * Signup page component with multi-step wizard form.
+ * Collects account info and service address.
+ *
+ * @returns Signup page with wizard form and social buttons
+ */
 export default function JoinPage() {
   return (
     <AuthLayout title='Create your account' subtitle='Join us to book your cleaning services'>

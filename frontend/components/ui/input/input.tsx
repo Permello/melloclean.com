@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Eduardo Turcios. All rights reserved.
+ * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ */
+
 import React, { useRef, useState } from 'react';
 import { cn } from '~/core/util/cn';
 import { inputVariants } from './ts/variants';
@@ -6,8 +11,21 @@ import { useTextField } from 'react-aria';
 import { mergeRefs } from '~/core/util/mergeRef';
 import { Eye, EyeOff } from 'lucide-react';
 
+/**
+ * Accessible input component with label, error, and hint support.
+ * Built with React Aria for accessibility. Includes password visibility toggle.
+ *
+ * @example
+ * ```tsx
+ * <Input label="Email" type="email" />
+ * <Input label="Password" type="password" error="Required" />
+ * ```
+ *
+ * @param props - Component props
+ * @returns Rendered input element with optional label and messages
+ */
 const Input: React.FC<InputProps> = (props: InputProps) => {
-  const { className, variant, label, error, hint, type, ref, ...rest } = props;
+  const { className, variant, label, error, hint, type, ref, id, ...rest } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
   const { labelProps, inputProps, errorMessageProps, descriptionProps } = useTextField(
