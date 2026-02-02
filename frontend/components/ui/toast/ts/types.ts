@@ -1,24 +1,24 @@
-import type { VariantProps } from 'class-variance-authority';
-import type { toastVariants } from './variants';
+import type { QueuedToast, ToastState } from '@react-stately/toast';
 
 type ToastVariant = 'success' | 'error' | 'warning' | 'info';
 
-interface Toast {
-  id: string;
+interface ToastContent {
   message: string;
   variant: ToastVariant;
-  duration?: number;
 }
 
-interface ToastContextValue {
-  toasts: Toast[];
+interface ToastActions {
   addToast: (message: string, variant?: ToastVariant, duration?: number) => void;
-  removeToast: (id: string) => void;
+  removeToast: (key: string) => void;
 }
 
-type ToastProps = VariantProps<typeof toastVariants> & {
-  message: string;
-  onClose: () => void;
+type ToastProps = {
+  toast: QueuedToast<ToastContent>;
+  state: ToastState<ToastContent>;
 };
 
-export type { Toast, ToastVariant, ToastContextValue, ToastProps };
+interface ToastRegionProps {
+  state: ToastState<ToastContent>;
+}
+
+export type { ToastVariant, ToastContent, ToastActions, ToastProps, ToastRegionProps };

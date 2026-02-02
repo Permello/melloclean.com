@@ -1,3 +1,4 @@
 export * from './toast';
+export * from './toast-region';
 export * from './toast-provider';
-export type { Toast, ToastVariant, ToastContextValue, ToastProps } from './ts/types';
+export type { ToastVariant, ToastContent, ToastActions, ToastProps, ToastRegionProps } from './ts/types';
