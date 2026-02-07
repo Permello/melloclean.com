@@ -24,11 +24,14 @@ export const validators = {
     !/^\d{5}$/.test(value) ? 'Zip code must be 5 digits' : null,
 
   /** Validates that password confirmation matches */
-  confirmPassword: (value: string, password: string): string | null =>
-    value !== password ? 'Passwords do not match' : null,
+  confirmPassword: (value: string, data: Record<string, string>): string | null =>
+    value !== data.password ? 'Passwords do not match' : null,
 };
 
-export type ValidatorFn = (value: string, ...args: [string?]) => string | null;
+export type ValidatorFn<T extends Record<string, string> = Record<string, string>> = (
+  value: string,
+  data: T,
+) => string | null;
 /**
  * Record of field names to error messages.
  */
@@ -51,7 +54,7 @@ export function validateForm<T extends Record<string, string>>(
     const value = data[field] ?? '';
 
     for (const rule of rules[field]) {
-      const error = rule(value, data.password); // example
+      const error = rule(value, data);
       if (error) {
         errors[field] = error;
         break;

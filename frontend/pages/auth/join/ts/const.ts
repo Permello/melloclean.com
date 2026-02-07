@@ -11,7 +11,7 @@ const AccountStage: WizardStageConfig = {
     password: [(v) => validators.required(v, 'Password'), (v) => validators.minLength(v, 8)],
     confirmPassword: [
       (v) => validators.required(v, 'Confirm password'),
-      (v, password) => validators.confirmPassword(v, password || ''),
+      validators.confirmPassword,
     ],
   },
 };
