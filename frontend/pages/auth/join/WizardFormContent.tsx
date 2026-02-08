@@ -43,6 +43,7 @@ export function WizardFormContent() {
             <Input
               name='firstName'
               label='First Name'
+              aria-label='First name'
               placeholder='John'
               autoComplete='given-name'
               value={formData.firstName || ''}
@@ -53,6 +54,7 @@ export function WizardFormContent() {
             <Input
               name='lastName'
               label='Last Name'
+              aria-label='Last name'
               placeholder='Doe'
               autoComplete='family-name'
               value={formData.lastName || ''}
@@ -65,6 +67,7 @@ export function WizardFormContent() {
           <Input
             name='email'
             label='Email'
+            aria-label='Email address'
             type='email'
             placeholder='you@example.com'
             autoComplete='email'
@@ -77,6 +80,7 @@ export function WizardFormContent() {
           <PasswordInput
             name='password'
             label='Password'
+            aria-label='Create a password'
             placeholder='Create a password'
             autoComplete='new-password'
             showRequirements
@@ -89,6 +93,7 @@ export function WizardFormContent() {
           <PasswordInput
             name='confirmPassword'
             label='Confirm Password'
+            aria-label='Confirm your password'
             placeholder='Confirm your password'
             autoComplete='new-password'
             value={formData.confirmPassword || ''}
@@ -104,6 +109,7 @@ export function WizardFormContent() {
           <Input
             name='street'
             label='Street Address'
+            aria-label='Street address'
             placeholder='123 Main St'
             autoComplete='street-address'
             value={formData.street || ''}
@@ -116,6 +122,7 @@ export function WizardFormContent() {
             <Input
               name='city'
               label='City'
+              aria-label='City'
               placeholder='Houston'
               autoComplete='address-level2'
               value={formData.city || ''}
@@ -126,6 +133,7 @@ export function WizardFormContent() {
             <Input
               name='state'
               label='State'
+              aria-label='State'
               placeholder='TX'
               autoComplete='address-level1'
               value={formData.state || ''}
@@ -138,6 +146,7 @@ export function WizardFormContent() {
           <Input
             name='zipCode'
             label='Zip Code'
+            aria-label='Zip code'
             placeholder='77001'
             autoComplete='postal-code'
             value={formData.zipCode || ''}
@@ -153,6 +162,7 @@ export function WizardFormContent() {
           <Input
             name='street'
             label='Street Address'
+            aria-label='Street address'
             placeholder='123 Main St'
             autoComplete='street-address'
             value={formData.street || ''}
@@ -165,6 +175,7 @@ export function WizardFormContent() {
             <Input
               name='city'
               label='City'
+              aria-label='City'
               placeholder='Houston'
               autoComplete='address-level2'
               value={formData.city || ''}
@@ -175,6 +186,7 @@ export function WizardFormContent() {
             <Input
               name='state'
               label='State'
+              aria-label='State'
               placeholder='TX'
               autoComplete='address-level1'
               value={formData.state || ''}
@@ -187,6 +199,7 @@ export function WizardFormContent() {
           <Input
             name='zipCode'
             label='Zip Code'
+            aria-label='Zip code'
             placeholder='77001'
             autoComplete='postal-code'
             value={formData.zipCode || ''}
@@ -202,6 +215,7 @@ export function WizardFormContent() {
           <Input
             name='street'
             label='Street Address'
+            aria-label='Street address'
             placeholder='123 Main St'
             autoComplete='street-address'
             value={formData.street || ''}
@@ -214,6 +228,7 @@ export function WizardFormContent() {
             <Input
               name='city'
               label='City'
+              aria-label='City'
               placeholder='Houston'
               autoComplete='address-level2'
               value={formData.city || ''}
@@ -224,6 +239,7 @@ export function WizardFormContent() {
             <Input
               name='state'
               label='State'
+              aria-label='State'
               placeholder='TX'
               autoComplete='address-level1'
               value={formData.state || ''}
@@ -236,6 +252,7 @@ export function WizardFormContent() {
           <Input
             name='zipCode'
             label='Zip Code'
+            aria-label='Zip code'
             placeholder='77001'
             autoComplete='postal-code'
             value={formData.zipCode || ''}

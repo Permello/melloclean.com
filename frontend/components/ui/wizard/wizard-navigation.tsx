@@ -45,7 +45,7 @@ export function WizardNavigation({
       className={cn('flex gap-3', isFirstStage ? 'justify-center' : 'justify-between', className)}
     >
       {!isFirstStage && (
-        <Button type='button' variant='secondary' onPress={prevStage}>
+        <Button type='button' variant='secondary' onPress={prevStage} aria-label='Go to previous step'>
           {backLabel}
         </Button>
       )}
@@ -56,11 +56,12 @@ export function WizardNavigation({
           disabled={isSubmitting}
           isLoading={isSubmitting}
           onClick={handleSubmit}
+          aria-label={completeLabel}
         >
           {completeLabel}
         </Button>
       ) : (
-        <Button type='button' onClick={handleNext}>
+        <Button type='button' onClick={handleNext} aria-label='Go to next step'>
           {nextLabel}
         </Button>
       )}

@@ -73,6 +73,7 @@ export function Hero() {
             <div className='flex flex-wrap gap-4'>
               <Button
                 onPress={openBooking}
+                aria-label='Book a cleaning now'
                 className='shadow-lg shadow-emerald-200 data-[hovered=true]:shadow-xl data-[hovered=true]:shadow-emerald-300'
               >
                 Book Now
@@ -80,6 +81,7 @@ export function Hero() {
               </Button>
               <Button
                 variant='secondary'
+                aria-label='View all services'
                 className='border-2 border-slate-200 data-[hovered=true]:border-emerald-300 data-[hovered=true]:bg-emerald-50'
               >
                 View Services

@@ -67,15 +67,16 @@ export function Navbar() {
 
             <div className='hidden items-center gap-4 md:flex'>
               <Link to={'/login'}>
-                <button className='text-slate-600 hover:text-emerald-600'>Customer Login</button>
+                <button aria-label='Customer login' className='text-slate-600 hover:text-emerald-600'>Customer Login</button>
               </Link>
-              <Button size='small' onPress={openBooking}>
+              <Button size='small' onPress={openBooking} aria-label='Book a cleaning'>
                 Book Now
               </Button>
             </div>
 
             {/* Mobile Menu Button */}
             <button
+              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
               className='p-2 text-slate-600 md:hidden'
               onClick={() => setMobileOpen(!mobileOpen)}
             >
@@ -114,11 +115,12 @@ export function Navbar() {
                     openBooking();
                   }}
                   className='w-full'
+                  aria-label='Book a cleaning'
                 >
                   Book Now
                 </Button>
                 <Link to='/login' onClick={() => setMobileOpen(false)}>
-                  <button className='w-full rounded-full bg-slate-100 py-6 text-lg text-slate-900 hover:bg-slate-200'>
+                  <button aria-label='Customer login' className='w-full rounded-full bg-slate-100 py-6 text-lg text-slate-900 hover:bg-slate-200'>
                     Customer Login
                   </button>
                 </Link>

@@ -30,6 +30,7 @@ const FacebookLoginButton: React.FC = () => {
   return (
     <button
       type='button'
+      aria-label='Continue with Facebook'
       onClick={() => addToast('Facebook login coming soon', 'info')}
       className='flex w-full items-center justify-center gap-3 rounded-lg bg-[#1877F2] px-4 py-3 font-medium text-white transition-colors hover:bg-[#166FE5]'
     >

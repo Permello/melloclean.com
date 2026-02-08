@@ -103,6 +103,7 @@ export function BookingFormContent() {
           </div>
           <Input
             label='Square Footage'
+            aria-label='Square footage of your home'
             type='number'
             placeholder='e.g. 1500'
             value={formData.squareFootage || ''}
@@ -148,6 +149,7 @@ export function BookingFormContent() {
           {formData.hasSpecialOccasion === 'yes' && (
             <Input
               label='Describe the occasion'
+              aria-label='Describe the special occasion'
               placeholder='e.g. Housewarming party, Holiday guests'
               value={formData.specialOccasion || ''}
               onChange={(val) => setField('specialOccasion', val)}
@@ -156,6 +158,7 @@ export function BookingFormContent() {
           )}
           <Input
             label='Preferred Date'
+            aria-label='Preferred cleaning date'
             type='date'
             value={formData.preferredDate || ''}
             onChange={(val) => setField('preferredDate', val)}

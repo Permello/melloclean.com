@@ -66,6 +66,7 @@ export default function LoginPage() {
         <Input
           name='email'
           label='Email'
+          aria-label='Email address'
           type='email'
           placeholder='you@example.com'
           autoComplete='email'
@@ -75,12 +76,13 @@ export default function LoginPage() {
         <PasswordInput
           name='password'
           label='Password'
+          aria-label='Password'
           placeholder='Enter your password'
           autoComplete='current-password'
           error={actionData?.errors?.password}
         />
 
-        <Button type='submit' disabled={isSubmitting} isLoading={isSubmitting} className='w-full'>
+        <Button type='submit' disabled={isSubmitting} isLoading={isSubmitting} className='w-full' aria-label='Sign in'>
           Sign In
         </Button>
       </Form>

@@ -92,6 +92,7 @@ const Select: React.FC<SelectProps> = ({
           onKeyDown={handleKeyDown}
           aria-haspopup='listbox'
           aria-expanded={isOpen}
+          aria-label={`Select ${label || 'option'}`}
         >
           <span className={selectedOption ? 'text-slate-900' : 'text-slate-400'}>
             {selectedOption ? selectedOption.label : placeholder}
