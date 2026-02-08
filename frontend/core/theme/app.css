@@ -50,4 +50,10 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: #059669;
   }
+
+  ::-webkit-scrollbar-button {
+    display: none;
+    height: 0; /* Ensures no space is occupied */
+    width: 0;
+  }
 }
