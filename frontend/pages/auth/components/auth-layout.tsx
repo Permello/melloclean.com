@@ -32,7 +32,7 @@ interface AuthLayoutProps {
  */
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) => {
   return (
-    <div className='relative flex min-h-screen items-center justify-center overflow-hidden overscroll-none md:overscroll-auto bg-gradient-to-br from-emerald-50 via-teal-50 to-white p-4'>
+    <div className='relative flex min-h-screen items-center justify-center overflow-hidden overscroll-none bg-gradient-to-br from-emerald-50 via-teal-50 to-white p-4 md:overscroll-auto'>
       {/* Blurred decorative circles */}
       <div className='absolute -top-32 -left-32 h-96 w-96 rounded-full bg-emerald-200/30 blur-3xl' />
       <div className='absolute top-1/4 -right-24 h-80 w-80 rounded-full bg-teal-200/30 blur-3xl' />
@@ -41,7 +41,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className='z-10 w-full max-w-md overflow-y-auto md:overflow-y-visible max-h-[calc(100vh-2rem)] md:max-h-none'
+        className='z-10 max-h-[calc(100vh-1rem)] w-full max-w-md overflow-y-auto md:max-h-none md:overflow-y-visible'
       >
         <div className='rounded-2xl bg-white p-5 shadow-xl sm:p-8'>
           <div className='mb-8 flex flex-col items-center'>
