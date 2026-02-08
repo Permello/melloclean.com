@@ -73,7 +73,7 @@ export function BookingSummary({ formData }: BookingSummaryProps) {
         <Text as='strong' className='mb-2 block'>
           General Info
         </Text>
-        <div className='grid grid-cols-2 gap-2 text-sm'>
+        <div className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm'>
           <span className='text-slate-500'>Cleaning Type</span>
           <span className='text-slate-900'>
             {cleaningTypeLabels[formData.cleaningType] || formData.cleaningType}
@@ -88,7 +88,7 @@ export function BookingSummary({ formData }: BookingSummaryProps) {
         <Text as='strong' className='mb-2 block'>
           Home Details
         </Text>
-        <div className='grid grid-cols-2 gap-2 text-sm'>
+        <div className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm'>
           <span className='text-slate-500'>Bedrooms</span>
           <span className='text-slate-900'>{formData.bedrooms}</span>
           <span className='text-slate-500'>Bathrooms</span>
@@ -107,7 +107,7 @@ export function BookingSummary({ formData }: BookingSummaryProps) {
         <Text as='strong' className='mb-2 block'>
           Visit Details
         </Text>
-        <div className='grid grid-cols-2 gap-2 text-sm'>
+        <div className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm'>
           <span className='text-slate-500'>Priority Areas</span>
           <span className='text-slate-900'>{priorityAreas.join(', ')}</span>
           <span className='text-slate-500'>Preferred Date</span>

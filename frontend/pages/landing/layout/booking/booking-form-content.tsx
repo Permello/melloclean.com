@@ -83,7 +83,7 @@ export function BookingFormContent() {
           <Heading level={5} className='mb-2'>
             Home Details
           </Heading>
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <Select
               label='Bedrooms'
               placeholder='Select'

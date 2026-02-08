@@ -59,7 +59,7 @@ export function WizardIndicator({ className, maxVisibleStages = 3 }: WizardIndic
   };
 
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn('hidden md:block', className)}>
       {start > 0 && (
         <div className='pointer-events-none absolute top-0 left-0 z-10 h-full w-8 bg-gradient-to-r from-white to-transparent' />
       )}

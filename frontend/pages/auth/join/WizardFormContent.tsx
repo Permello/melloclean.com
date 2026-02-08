@@ -39,7 +39,7 @@ export function WizardFormContent() {
 
       <WizardStage id='account'>
         <div className='space-y-4'>
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <Input
               name='firstName'
               label='First Name'
@@ -112,7 +112,7 @@ export function WizardFormContent() {
             isInvalid={!!combinedErrors?.street}
           />
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <Input
               name='city'
               label='City'
@@ -161,7 +161,7 @@ export function WizardFormContent() {
             isInvalid={!!combinedErrors?.street}
           />
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <Input
               name='city'
               label='City'
@@ -210,7 +210,7 @@ export function WizardFormContent() {
             isInvalid={!!combinedErrors?.street}
           />
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <Input
               name='city'
               label='City'
