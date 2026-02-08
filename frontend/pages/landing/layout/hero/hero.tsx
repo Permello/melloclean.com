@@ -9,6 +9,7 @@ import { Button } from '~/components/ui/button';
 import { Heading } from '~/components/ui/heading';
 import { Text } from '~/components/ui/text';
 import { useBooking } from '../booking/booking-context';
+import { BookingModal } from '../booking/booking-modal';
 
 /**
  * Hero section with headline, benefits, and call-to-action buttons.
@@ -71,14 +72,15 @@ export function Hero() {
             </div>
 
             <div className='flex flex-wrap gap-4'>
-              <Button
-                onPress={openBooking}
+              <BookingModal
                 aria-label='Book a cleaning now'
+                label='Book Now'
+                icon={<ArrowRight className='h-4 w-4' />}
+                title='Book a Cleaning'
+                showCloseButton
                 className='shadow-lg shadow-emerald-200 data-[hovered=true]:shadow-xl data-[hovered=true]:shadow-emerald-300'
-              >
-                Book Now
-                <ArrowRight className='ml-2 h-5 w-5' />
-              </Button>
+              />
+
               <Button
                 variant='secondary'
                 aria-label='View all services'

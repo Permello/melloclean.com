@@ -4,11 +4,7 @@
  */
 
 import { cva } from 'class-variance-authority';
-import {
-  toggleBaseClasses,
-  toggleUnselectedClasses,
-  toggleSelectedClasses,
-} from './constants';
+import { toggleBaseClasses, toggleUnselectedClasses, toggleSelectedClasses } from './constants';
 
 /**
  * CVA variant configuration for individual toggle buttons.

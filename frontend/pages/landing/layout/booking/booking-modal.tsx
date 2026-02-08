@@ -3,13 +3,14 @@
  * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
  */
 
+import { X } from 'lucide-react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
-import { Modal } from '~/components/ui/modal';
+import { ModalTrigger, type ModalTriggerProps } from '~/components/ui/modal/modal-trigger';
 import { Wizard, useWizard } from '~/components/ui/wizard';
 import { useBooking } from './booking-context';
 import { BookingFormContent } from './booking-form-content';
-import { bookingStages, BOOKING_STORAGE_KEY } from './ts/constants';
+import { BOOKING_STORAGE_KEY, bookingStages } from './ts/constants';
 
 /**
  * Booking modal component that wraps the multi-step wizard in a modal dialog.
@@ -17,7 +18,10 @@ import { bookingStages, BOOKING_STORAGE_KEY } from './ts/constants';
  *
  * @returns Rendered modal with booking wizard
  */
-export function BookingModal() {
+export function BookingModal(
+  props: ModalTriggerProps & { title?: string; showCloseButton?: boolean },
+) {
+  const { title, showCloseButton } = props;
   const { isBookingOpen, closeBooking } = useBooking();
   const navigate = useNavigate();
 
@@ -35,13 +39,32 @@ export function BookingModal() {
   );
 
   return (
-    <Modal isOpen={isBookingOpen} onClose={closeBooking} title='Book a Cleaning' size='large'>
-      <Wizard stages={bookingStages}>
-        <BookingFormWrapper onSave={handleSave}>
-          <BookingFormContent />
-        </BookingFormWrapper>
-      </Wizard>
-    </Modal>
+    <ModalTrigger {...props}>
+      {(close) => (
+        <>
+          {(title || showCloseButton) && (
+            <div className='mb-4 flex items-center justify-between border-b border-slate-100 px-6 py-4'>
+              {title && <h2 className='text-xl font-bold text-slate-900'>{title}</h2>}
+              {showCloseButton && (
+                <button
+                  type='button'
+                  onClick={close}
+                  className='ml-auto rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600'
+                  aria-label='Close dialog'
+                >
+                  <X className='h-5 w-5' />
+                </button>
+              )}
+            </div>
+          )}
+          <Wizard stages={bookingStages}>
+            <BookingFormWrapper onSave={handleSave}>
+              <BookingFormContent />
+            </BookingFormWrapper>
+          </Wizard>
+        </>
+      )}
+    </ModalTrigger>
   );
 }
 

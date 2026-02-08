@@ -29,9 +29,7 @@ export const validators = {
 
   /** Validates that a numeric string meets a minimum value */
   minNumber: (value: string, min: number, message?: string): string | null =>
-    isNaN(Number(value)) || Number(value) < min
-      ? message || `Must be at least ${min}`
-      : null,
+    isNaN(Number(value)) || Number(value) < min ? message || `Must be at least ${min}` : null,
 };
 
 export type ValidatorFn<T extends Record<string, string> = Record<string, string>> = (

@@ -4,11 +4,7 @@
  */
 
 import { cva } from 'class-variance-authority';
-import {
-  panelBaseClasses,
-  panelDefaultClasses,
-  panelLargeClasses,
-} from './constants';
+import { panelBaseClasses, panelDefaultClasses, panelLargeClasses } from './constants';
 
 /**
  * CVA variant configuration for the Modal panel.

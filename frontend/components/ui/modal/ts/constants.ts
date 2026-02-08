@@ -30,6 +30,7 @@ export const panelBaseClasses = [
   'max-h-[90vh]',
   'overflow-y-auto',
   'outline-none',
+  'px-6 py-4',
 ];
 
 /**

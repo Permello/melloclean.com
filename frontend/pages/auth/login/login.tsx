@@ -4,14 +4,14 @@
  */
 
 import { Form, Link, useActionData, useNavigation } from 'react-router';
-import type { Route } from './+types/login';
-import { AuthLayout } from '../components/auth-layout';
-import { SocialButtons } from '../components/social-buttons';
-import { PasswordInput } from '../components/password-input';
-import { Input } from '~/components/ui/input';
 import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
-import { validators, validateForm, type ValidationErrors } from '~/core/util/validation';
+import { validateForm, validators, type ValidationErrors } from '~/core/util/validation';
+import { AuthLayout } from '../components/auth-layout';
+import { PasswordInput } from '../components/password-input';
+import { SocialButtons } from '../components/social-buttons';
+import type { Route } from './+types/login';
 
 /**
  * Response data from the login action.
@@ -82,7 +82,13 @@ export default function LoginPage() {
           error={actionData?.errors?.password}
         />
 
-        <Button type='submit' disabled={isSubmitting} isLoading={isSubmitting} className='w-full' aria-label='Sign in'>
+        <Button
+          type='submit'
+          disabled={isSubmitting}
+          isLoading={isSubmitting}
+          className='w-full'
+          aria-label='Sign in'
+        >
           Sign In
         </Button>
       </Form>

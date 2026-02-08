@@ -5,11 +5,7 @@
 
 import { Heading } from '~/components/ui/heading';
 import { Text } from '~/components/ui/text';
-import {
-  cleaningTypeLabels,
-  lastCleanedLabels,
-  priorityAreaLabels,
-} from './ts/constants';
+import { cleaningTypeLabels, lastCleanedLabels, priorityAreaLabels } from './ts/constants';
 
 /**
  * Props for the BookingSummary component.

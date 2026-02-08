@@ -6,23 +6,12 @@
 /**
  * Tailwind classes for the slider track background.
  */
-export const trackClasses = [
-  'relative',
-  'h-2',
-  'w-full',
-  'rounded-full',
-  'bg-slate-200',
-];
+export const trackClasses = ['relative', 'h-2', 'w-full', 'rounded-full', 'bg-slate-200'];
 
 /**
  * Tailwind classes for the filled portion of the slider track.
  */
-export const fillClasses = [
-  'absolute',
-  'h-full',
-  'rounded-full',
-  'bg-emerald-500',
-];
+export const fillClasses = ['absolute', 'h-full', 'rounded-full', 'bg-emerald-500'];
 
 /**
  * Base Tailwind classes for the slider thumb.

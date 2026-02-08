@@ -4,25 +4,20 @@
  */
 
 import { useCallback } from 'react';
-import {
-  WizardStage,
-  WizardIndicator,
-  WizardNavigation,
-  useWizard,
-} from '~/components/ui/wizard';
+import { Heading } from '~/components/ui/heading';
+import { Input } from '~/components/ui/input';
 import { Select } from '~/components/ui/select';
 import { Slider } from '~/components/ui/slider';
-import { Input } from '~/components/ui/input';
 import { ToggleButtonGroup } from '~/components/ui/toggle-button-group';
-import { Heading } from '~/components/ui/heading';
+import { WizardIndicator, WizardNavigation, WizardStage, useWizard } from '~/components/ui/wizard';
 import { BookingSummary } from './booking-summary';
 import {
-  cleaningTypeOptions,
-  bedroomOptions,
   bathroomOptions,
+  bedroomOptions,
+  cleaningTypeOptions,
   lastCleanedOptions,
-  priorityAreaOptions,
   occasionOptions,
+  priorityAreaOptions,
 } from './ts/constants';
 
 /**
@@ -43,7 +38,9 @@ export function BookingFormContent() {
     [updateFormData],
   );
 
-  const priorityKeys = formData.priorityAreas ? formData.priorityAreas.split(',').filter(Boolean) : [];
+  const priorityKeys = formData.priorityAreas
+    ? formData.priorityAreas.split(',').filter(Boolean)
+    : [];
 
   return (
     <>
@@ -83,7 +80,7 @@ export function BookingFormContent() {
           <Heading level={5} className='mb-2'>
             Home Details
           </Heading>
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             <Select
               label='Bedrooms'
               placeholder='Select'
@@ -172,10 +169,7 @@ export function BookingFormContent() {
         <BookingSummary formData={formData} />
       </WizardStage>
 
-      <WizardNavigation
-        className='mt-8'
-        completeLabel='Confirm & Create Account'
-      />
+      <WizardNavigation className='mt-8' completeLabel='Confirm & Create Account' />
     </>
   );
 }
