@@ -4,14 +4,14 @@
  */
 
 import { Form, Link } from 'react-router';
-import type { Route } from './+types/join';
-import { AuthLayout } from '../components/auth-layout';
-import { SocialButtons } from '../components/social-buttons';
 import { Text } from '~/components/ui/text';
 import { Wizard } from '~/components/ui/wizard';
+import { AuthLayout } from '../components/auth-layout';
+import { SocialButtons } from '../components/social-buttons';
+import type { Route } from './+types/join';
+import { WizardStages } from './ts/constants';
 import type { ActionData, SignupFormData } from './ts/types';
 import { WizardFormContent } from './WizardFormContent';
-import { WizardStages } from './ts/const';
 
 /**
  * Server action to handle signup form submission.
