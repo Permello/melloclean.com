@@ -41,7 +41,7 @@ const getVisibleRange = (total: number, current: number, max: number) => {
  * @returns Stage indicator component
  */
 export function WizardIndicator({ className, maxVisibleStages = 3 }: WizardIndicatorProps) {
-  const { stages, currentStep } = useWizard();
+  const { stages, currentStep, goToStage } = useWizard();
 
   const { start, end } = getVisibleRange(stages.length, currentStep, maxVisibleStages);
   const visibleStages = stages.slice(start, end);
@@ -74,16 +74,20 @@ export function WizardIndicator({ className, maxVisibleStages = 3 }: WizardIndic
 
           return (
             <div key={stage.id} className='flex items-stretch'>
-              <div className='flex flex-col items-center'>
-                <motion.div
-                  className={cn(circleVariants({ status }))}
-                  initial={false}
-                  animate={{
-                    scale: status === 'active' ? 1.05 : 1,
-                  }}
-                  transition={{ duration: 0.2 }}
+              {isCompleted ? (
+                <button
+                  type='button'
+                  onClick={() => goToStage(actualIndex)}
+                  aria-label={`Go back to step ${actualIndex + 1}: ${stage.name}`}
+                  className='flex cursor-pointer flex-col items-center border-none bg-transparent p-0 focus-visible:rounded-full focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none'
                 >
-                  {isCompleted ? (
+                  <motion.div
+                    className={cn(circleVariants({ status }))}
+                    initial={false}
+                    animate={{ scale: 1 }}
+                    whileHover={{ scale: 1.15 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -91,12 +95,24 @@ export function WizardIndicator({ className, maxVisibleStages = 3 }: WizardIndic
                     >
                       <Check className='h-4 w-4' />
                     </motion.div>
-                  ) : (
-                    actualIndex + 1
-                  )}
-                </motion.div>
-                <span className={cn(labelVariants({ status }))}>{stage.name}</span>
-              </div>
+                  </motion.div>
+                  <span className={cn(labelVariants({ status }))}>{stage.name}</span>
+                </button>
+              ) : (
+                <div className='flex flex-col items-center'>
+                  <motion.div
+                    className={cn(circleVariants({ status }))}
+                    initial={false}
+                    animate={{
+                      scale: status === 'active' ? 1.05 : 1,
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {actualIndex + 1}
+                  </motion.div>
+                  <span className={cn(labelVariants({ status }))}>{stage.name}</span>
+                </div>
+              )}
 
               {visibleIndex < visibleStages.length - 1 && (
                 <div

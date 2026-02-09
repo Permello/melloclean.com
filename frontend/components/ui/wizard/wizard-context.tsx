@@ -86,6 +86,17 @@ export function WizardProvider({ stages, children }: WizardProviderProps) {
     }
   }, [isFirstStage]);
 
+  /** Navigates directly to a previously completed stage by index. Clears validation errors. */
+  const goToStage = useCallback(
+    (index: number) => {
+      if (index >= 0 && index < currentStep) {
+        setErrors({});
+        setCurrentStep(index);
+      }
+    },
+    [currentStep],
+  );
+
   const value: WizardContextValue = {
     currentStep,
     stages,
@@ -95,6 +106,7 @@ export function WizardProvider({ stages, children }: WizardProviderProps) {
     isLastStage,
     nextStage,
     prevStage,
+    goToStage,
     updateFormData,
     setErrors,
   };

@@ -90,6 +90,13 @@ export interface WizardContextValue {
   nextStage: () => boolean;
   /** Go back to previous stage */
   prevStage: () => void;
+  /**
+   * Navigates directly to a previously completed stage.
+   * Only allows navigation to stages before the current step.
+   *
+   * @param index - The 0-based index of the target stage
+   */
+  goToStage: (index: number) => void;
   /** Update form data */
   updateFormData: (data: Record<string, string>) => void;
   /** Set validation errors */
