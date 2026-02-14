@@ -51,18 +51,19 @@ class TestHashToken:
         result = hash_token(token)
         assert isinstance(result, str)
 
-    def test_returns_bcrypt_hash(self):
-        """hash_token should return a valid bcrypt hash."""
+    def test_returns_64_char_hex(self):
+        """hash_token should return a 64-character hex string."""
         token = generate_token()
         result = hash_token(token)
-        assert result.startswith("$2b$12$")
+        assert len(result) == 64
+        assert all(c in "0123456789abcdef" for c in result)
 
-    def test_different_calls_produce_different_hashes(self):
-        """Each call should produce a unique hash due to random salt."""
+    def test_deterministic(self):
+        """Same input should always produce the same hash."""
         token = generate_token()
         hash1 = hash_token(token)
         hash2 = hash_token(token)
-        assert hash1 != hash2
+        assert hash1 == hash2
 
 
 class TestVerifyToken:
