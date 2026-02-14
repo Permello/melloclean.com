@@ -9,9 +9,11 @@
 /.claude/
 CLAUDE.md
 
+# Python
+__pycache__/
+*.pyc
+
 # Backend
 backend/.env
-backend/__pycache__/
-backend/**/__pycache__/
-backend/*.pyc
 backend/venv/
+backend/.pytest_cache/

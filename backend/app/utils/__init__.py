@@ -1,0 +1,1 @@
+from app.utils.config import DATABASE_URL  # noqa: F401, F403
