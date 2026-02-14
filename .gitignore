@@ -8,3 +8,10 @@
 
 /.claude/
 CLAUDE.md
+
+# Backend
+backend/.env
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.pyc
+backend/venv/
