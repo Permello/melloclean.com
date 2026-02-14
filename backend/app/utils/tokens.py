@@ -1,12 +1,11 @@
 """Token generation and hashing utilities.
 
 Provides functions to generate cryptographically secure URL-safe tokens
-and to hash/verify them using bcrypt.
+and to hash/verify them using SHA-256.
 """
 
+import hashlib
 import secrets
-
-from app.utils.hashing import bcrypt_hash, bcrypt_verify
 
 
 def generate_token(nbytes: int = 32) -> str:
@@ -22,25 +21,25 @@ def generate_token(nbytes: int = 32) -> str:
 
 
 def hash_token(token: str) -> str:
-    """Hash a plaintext token using bcrypt with cost factor 12.
+    """Hash a plaintext token using SHA-256.
 
     Args:
         token: The plaintext token to hash.
 
     Returns:
-        The bcrypt hash as a UTF-8 string.
+        The hex-encoded SHA-256 digest (64 characters).
     """
-    return bcrypt_hash(token)
+    return hashlib.sha256(token.encode()).hexdigest()
 
 
 def verify_token(token: str, hashed: str) -> bool:
-    """Verify a plaintext token against a bcrypt hash.
+    """Verify a plaintext token against a SHA-256 hash.
 
     Args:
         token: The plaintext token to check.
-        hashed: The stored bcrypt hash to verify against.
+        hashed: The stored SHA-256 hex digest to verify against.
 
     Returns:
         True if the token matches the hash, False otherwise.
     """
-    return bcrypt_verify(token, hashed)
+    return hash_token(token) == hashed
