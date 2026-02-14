@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """Tests for the database module.
 
 Verifies that get_session returns a working SQLModel Session

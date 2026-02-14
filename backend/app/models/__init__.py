@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """Barrel exports for all database models.
 
 Import any model from this package directly:

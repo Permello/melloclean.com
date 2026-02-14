@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """Application configuration loaded from environment variables.
 
 Reads the .env file located at the backend root (two directories above

@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """EmailVerificationToken model — one-time tokens for confirming email ownership."""
 
 import uuid

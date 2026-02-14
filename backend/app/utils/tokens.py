@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """Token generation and hashing utilities.
 
 Provides functions to generate cryptographically secure URL-safe tokens

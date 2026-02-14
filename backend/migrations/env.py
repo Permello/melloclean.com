@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """Alembic environment configuration.
 
 Imports all SQLModel models so that autogenerate can detect schema

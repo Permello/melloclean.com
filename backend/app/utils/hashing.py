@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """Shared bcrypt hashing helpers.
 
 Provides low-level hash and verify functions used by both

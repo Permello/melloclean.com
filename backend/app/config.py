@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """Flask configuration loaded from environment variables.
 
 Provides a single Config class with all settings as class-level attributes.

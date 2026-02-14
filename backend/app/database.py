@@ -1,3 +1,5 @@
+# Copyright 2026 Eduardo Turcios. All rights reserved.
+# Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
 """Database engine and session factory.
 
 Provides a SQLModel engine connected via app.utils.config.DATABASE_URL
