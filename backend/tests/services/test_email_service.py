@@ -211,9 +211,10 @@ class TestGetGmailService:
     """Tests for _get_gmail_service helper."""
 
     @patch("app.services.email_service.build")
+    @patch("app.services.email_service.os.path.exists", return_value=True)
     @patch("app.services.email_service.Credentials.from_authorized_user_file")
-    def test_builds_gmail_service_with_credentials(self, mock_creds_load, mock_build):
-        """_get_gmail_service should load credentials and build a Gmail service."""
+    def test_builds_gmail_service_with_existing_token(self, mock_creds_load, mock_exists, mock_build):
+        """_get_gmail_service should load credentials from token file and build service."""
         from app.services.email_service import _get_gmail_service
 
         mock_creds = MagicMock()
@@ -222,12 +223,14 @@ class TestGetGmailService:
 
         _get_gmail_service()
 
+        mock_creds_load.assert_called_once()
         mock_build.assert_called_once_with("gmail", "v1", credentials=mock_creds)
 
     @patch("builtins.open", mock_open())
     @patch("app.services.email_service.build")
+    @patch("app.services.email_service.os.path.exists", return_value=True)
     @patch("app.services.email_service.Credentials.from_authorized_user_file")
-    def test_refreshes_expired_credentials(self, mock_creds_load, mock_build):
+    def test_refreshes_expired_credentials(self, mock_creds_load, mock_exists, mock_build):
         """_get_gmail_service should refresh credentials when expired."""
         from app.services.email_service import _get_gmail_service
 
@@ -240,3 +243,23 @@ class TestGetGmailService:
         _get_gmail_service()
 
         mock_creds.refresh.assert_called_once()
+
+    @patch("builtins.open", mock_open())
+    @patch("app.services.email_service.build")
+    @patch("app.services.email_service.InstalledAppFlow.from_client_secrets_file")
+    @patch("app.services.email_service.os.path.exists", return_value=False)
+    def test_runs_oauth_flow_when_no_token_file(self, mock_exists, mock_flow_cls, mock_build):
+        """_get_gmail_service should run OAuth consent flow when token file is missing."""
+        from app.services.email_service import _get_gmail_service
+
+        mock_creds = MagicMock()
+        mock_creds.valid = True
+        mock_flow = MagicMock()
+        mock_flow.run_local_server.return_value = mock_creds
+        mock_flow_cls.return_value = mock_flow
+
+        _get_gmail_service()
+
+        mock_flow_cls.assert_called_once()
+        mock_flow.run_local_server.assert_called_once_with(port=0)
+        mock_build.assert_called_once_with("gmail", "v1", credentials=mock_creds)

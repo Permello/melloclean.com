@@ -7,31 +7,40 @@ using branded HTML templates through the Gmail API.
 """
 
 import base64
+import os
 from email.mime.text import MIMEText
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 from app.config import Config
+
+SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 
 def _get_gmail_service():
     """Authenticate via OAuth2 and return a Gmail API service instance.
 
-    Loads credentials from the token file. If the token is expired
-    but has a refresh token, it will be refreshed automatically.
+    Loads credentials from the token file if it exists. If no token
+    file is found, runs the OAuth2 consent flow using the credentials
+    file to generate one. Expired tokens are refreshed automatically.
 
     Returns:
         A Gmail API service resource.
     """
-    creds = Credentials.from_authorized_user_file(
-        Config.GMAIL_TOKEN_FILE,
-        scopes=["https://www.googleapis.com/auth/gmail.send"],
-    )
+    creds = None
 
-    if not creds.valid and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
+    if os.path.exists(Config.GMAIL_TOKEN_FILE):
+        creds = Credentials.from_authorized_user_file(Config.GMAIL_TOKEN_FILE, scopes=SCOPES)
+
+    if creds is None or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(Config.GMAIL_CREDENTIALS_FILE, SCOPES)
+            creds = flow.run_local_server(port=0)
 
         with open(Config.GMAIL_TOKEN_FILE, "w") as f:
             f.write(creds.to_json())
@@ -61,43 +70,7 @@ def send_email(to: str, subject: str, html: str) -> None:
     service.users().messages().send(userId="me", body={"raw": raw}).execute()
 
 
-def send_verification_email(first_name: str, email: str, verification_url: str) -> None:
-    """Send a verification email with a branded HTML template.
-
-    Args:
-        first_name: User's first name for personalization.
-        email: Recipient email address.
-        verification_url: Full URL for email verification.
-    """
-    subject = "Verify Your Email — MelloClean"
-    html = _verification_template(first_name, verification_url)
-    send_email(email, subject, html)
-
-
-def send_password_reset_email(first_name: str, email: str, reset_url: str) -> None:
-    """Send a password reset email with a branded HTML template.
-
-    Args:
-        first_name: User's first name for personalization.
-        email: Recipient email address.
-        reset_url: Full URL for password reset.
-    """
-    subject = "Reset Your Password — MelloClean"
-    html = _password_reset_template(first_name, reset_url)
-    send_email(email, subject, html)
-
-
-def _verification_template(first_name: str, verification_url: str) -> str:
-    """Build the verification email HTML template.
-
-    Args:
-        first_name: User's first name.
-        verification_url: Clickable verification link.
-
-    Returns:
-        Fully rendered HTML string with inline CSS.
-    """
-    return f"""\
+VERIFICATION_HTML = """\
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"></head>
@@ -141,18 +114,7 @@ def _verification_template(first_name: str, verification_url: str) -> str:
 </body>
 </html>"""
 
-
-def _password_reset_template(first_name: str, reset_url: str) -> str:
-    """Build the password reset email HTML template.
-
-    Args:
-        first_name: User's first name.
-        reset_url: Clickable password reset link.
-
-    Returns:
-        Fully rendered HTML string with inline CSS.
-    """
-    return f"""\
+PASSWORD_RESET_HTML = """\
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"></head>
@@ -195,3 +157,29 @@ def _password_reset_template(first_name: str, reset_url: str) -> str:
   </table>
 </body>
 </html>"""
+
+
+def send_verification_email(first_name: str, email: str, verification_url: str) -> None:
+    """Send a verification email with a branded HTML template.
+
+    Args:
+        first_name: User's first name for personalization.
+        email: Recipient email address.
+        verification_url: Full URL for email verification.
+    """
+    subject = "Verify Your Email — MelloClean"
+    html = VERIFICATION_HTML.format(first_name=first_name, verification_url=verification_url)
+    send_email(email, subject, html)
+
+
+def send_password_reset_email(first_name: str, email: str, reset_url: str) -> None:
+    """Send a password reset email with a branded HTML template.
+
+    Args:
+        first_name: User's first name for personalization.
+        email: Recipient email address.
+        reset_url: Full URL for password reset.
+    """
+    subject = "Reset Your Password — MelloClean"
+    html = PASSWORD_RESET_HTML.format(first_name=first_name, reset_url=reset_url)
+    send_email(email, subject, html)
