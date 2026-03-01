@@ -7,6 +7,7 @@ Flask test app with decorated routes and a mocked validate_session.
 """
 
 import uuid
+from http import HTTPStatus
 from unittest.mock import patch
 
 from flask import Flask, g, jsonify
@@ -66,7 +67,7 @@ class TestRequireAuth:
         app = _create_test_app()
         with app.test_client() as client:
             resp = client.get("/auth-only")
-            assert resp.status_code == 401
+            assert resp.status_code == HTTPStatus.UNAUTHORIZED
             assert resp.get_json()["error"] == "Authentication required"
 
     def test_returns_401_when_session_invalid(self):
@@ -76,7 +77,7 @@ class TestRequireAuth:
             with patch("app.middleware.auth.validate_session", return_value=None):
                 client.set_cookie("mello_session", "bad-token")
                 resp = client.get("/auth-only")
-                assert resp.status_code == 401
+                assert resp.status_code == HTTPStatus.UNAUTHORIZED
                 assert resp.get_json()["error"] == "Authentication required"
 
     def test_sets_g_user_and_g_session_token(self):
@@ -87,7 +88,7 @@ class TestRequireAuth:
             with patch("app.middleware.auth.validate_session", return_value=result):
                 client.set_cookie("mello_session", "valid-token")
                 resp = client.get("/auth-only")
-                assert resp.status_code == 200
+                assert resp.status_code == HTTPStatus.OK
                 data = resp.get_json()
                 assert data["user_id"] == str(result["user"]["id"])
                 assert data["token"] == "valid-token"
@@ -116,7 +117,7 @@ class TestRequireRole:
             with patch("app.middleware.auth.validate_session", return_value=result):
                 client.set_cookie("mello_session", "valid-token")
                 resp = client.get("/admin-only")
-                assert resp.status_code == 403
+                assert resp.status_code == HTTPStatus.FORBIDDEN
                 assert resp.get_json()["error"] == "Forbidden"
 
     def test_passes_for_matching_role(self):
@@ -127,7 +128,7 @@ class TestRequireRole:
             with patch("app.middleware.auth.validate_session", return_value=result):
                 client.set_cookie("mello_session", "valid-token")
                 resp = client.get("/admin-only")
-                assert resp.status_code == 200
+                assert resp.status_code == HTTPStatus.OK
                 assert resp.get_json()["role"] == "ADMIN"
 
     def test_variadic_roles_worker_passes(self):
@@ -138,7 +139,7 @@ class TestRequireRole:
             with patch("app.middleware.auth.validate_session", return_value=result):
                 client.set_cookie("mello_session", "valid-token")
                 resp = client.get("/worker-or-admin")
-                assert resp.status_code == 200
+                assert resp.status_code == HTTPStatus.OK
                 assert resp.get_json()["role"] == "WORKER"
 
     def test_variadic_roles_admin_passes(self):
@@ -149,7 +150,7 @@ class TestRequireRole:
             with patch("app.middleware.auth.validate_session", return_value=result):
                 client.set_cookie("mello_session", "valid-token")
                 resp = client.get("/worker-or-admin")
-                assert resp.status_code == 200
+                assert resp.status_code == HTTPStatus.OK
                 assert resp.get_json()["role"] == "ADMIN"
 
     def test_variadic_roles_client_rejected(self):
@@ -160,5 +161,5 @@ class TestRequireRole:
             with patch("app.middleware.auth.validate_session", return_value=result):
                 client.set_cookie("mello_session", "valid-token")
                 resp = client.get("/worker-or-admin")
-                assert resp.status_code == 403
+                assert resp.status_code == HTTPStatus.FORBIDDEN
                 assert resp.get_json()["error"] == "Forbidden"

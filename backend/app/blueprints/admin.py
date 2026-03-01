@@ -9,6 +9,7 @@ under the ``/api/admin`` prefix by the app factory.
 
 import re
 import uuid
+from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
 from sqlmodel import select
@@ -86,7 +87,7 @@ def list_users():
                 "page": 1,
                 "per_page": len(users),
                 "total": len(users),
-            }), 200
+            }), HTTPStatus.OK
 
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", _DEFAULT_PER_PAGE, type=int)
@@ -107,7 +108,7 @@ def list_users():
             "page": page,
             "per_page": per_page,
             "total": total,
-        }), 200
+        }), HTTPStatus.OK
 
 
 @admin_bp.route("/users", methods=["POST"])
@@ -134,29 +135,29 @@ def create_user():
     role_str = data.get("role")
 
     if not email or not password or not first_name or not last_name or not role_str:
-        return jsonify({"error": "Email, password, firstName, lastName, and role are required."}), 400
+        return jsonify({"error": "Email, password, firstName, lastName, and role are required."}), HTTPStatus.BAD_REQUEST
 
     if not _EMAIL_RE.match(email):
-        return jsonify({"error": "Invalid email address."}), 400
+        return jsonify({"error": "Invalid email address."}), HTTPStatus.BAD_REQUEST
 
     if len(password) < _MIN_PASSWORD_LENGTH:
-        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), 400
+        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), HTTPStatus.BAD_REQUEST
 
     if not confirm_password:
-        return jsonify({"error": "confirmPassword is required."}), 400
+        return jsonify({"error": "confirmPassword is required."}), HTTPStatus.BAD_REQUEST
 
     if password != confirm_password:
-        return jsonify({"error": "Passwords do not match."}), 400
+        return jsonify({"error": "Passwords do not match."}), HTTPStatus.BAD_REQUEST
 
     if role_str not in _VALID_ROLES:
-        return jsonify({"error": f"Invalid role. Must be one of: {', '.join(sorted(_VALID_ROLES))}."}), 400
+        return jsonify({"error": f"Invalid role. Must be one of: {', '.join(sorted(_VALID_ROLES))}."}), HTTPStatus.BAD_REQUEST
 
     email = email.lower()
 
     with get_session() as db:
         existing = db.exec(select(User).where(User.email == email)).first()
         if existing is not None:
-            return jsonify({"error": "A user with this email already exists.", "code": "EMAIL_TAKEN"}), 409
+            return jsonify({"error": "A user with this email already exists.", "code": "EMAIL_TAKEN"}), HTTPStatus.CONFLICT
 
         user = User(
             email=email,
@@ -170,7 +171,7 @@ def create_user():
         db.commit()
         db.refresh(user)
 
-        return jsonify(_user_dict(user)), 201
+        return jsonify(_user_dict(user)), HTTPStatus.CREATED
 
 
 @admin_bp.route("/users/<user_id>/revoke-sessions", methods=["POST"])
@@ -192,7 +193,7 @@ def revoke_sessions(user_id):
     try:
         uid = uuid.UUID(user_id)
     except ValueError:
-        return jsonify({"error": "Invalid user ID."}), 404
+        return jsonify({"error": "Invalid user ID."}), HTTPStatus.NOT_FOUND
 
     revoke_all_user_sessions(uid)
-    return jsonify({"success": True}), 200
+    return jsonify({"success": True}), HTTPStatus.OK

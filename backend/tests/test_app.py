@@ -6,6 +6,8 @@ Verifies that create_app produces a properly configured Flask app
 with health endpoint, CORS, and registered blueprints.
 """
 
+from http import HTTPStatus
+
 import pytest
 from flask import Flask
 
@@ -38,7 +40,7 @@ class TestHealthEndpoint:
     def test_health_returns_ok(self, client):
         """GET /health should return status ok."""
         response = client.get("/health")
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert response.get_json() == {"status": "ok"}
 
 
@@ -66,7 +68,7 @@ class TestCORS:
                 "Access-Control-Request-Method": "GET",
             },
         )
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert "Access-Control-Allow-Origin" in response.headers
 
     def test_cors_allows_credentials(self, client):

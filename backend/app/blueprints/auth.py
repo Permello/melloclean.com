@@ -8,6 +8,7 @@ registered under the ``/api/auth`` prefix by the app factory.
 """
 
 import re
+from http import HTTPStatus
 
 from flask import Blueprint, g, jsonify, request
 
@@ -29,8 +30,8 @@ _ZIP_RE = re.compile(r"^\d{5}$")
 
 """Maps AuthError codes to HTTP status codes."""
 _ERROR_STATUS = {
-    "EMAIL_TAKEN": 409,
-    "INVALID_CREDENTIALS": 401,
+    "EMAIL_TAKEN": HTTPStatus.CONFLICT,
+    "INVALID_CREDENTIALS": HTTPStatus.UNAUTHORIZED,
 }
 
 
@@ -43,7 +44,7 @@ def _error_response(err: AuthError):
     Returns:
         A tuple of (response, status_code).
     """
-    status = _ERROR_STATUS.get(err.code, 400)
+    status = _ERROR_STATUS.get(err.code, HTTPStatus.BAD_REQUEST)
     return jsonify({"error": err.message, "code": err.code}), status
 
 
@@ -92,25 +93,25 @@ def signup():
     zip_code = data.get("zipCode")
 
     if not email or not password or not first_name or not last_name:
-        return jsonify({"error": "Email, password, firstName, and lastName are required."}), 400
+        return jsonify({"error": "Email, password, firstName, and lastName are required."}), HTTPStatus.BAD_REQUEST
 
     if not _EMAIL_RE.match(email):
-        return jsonify({"error": "Invalid email address."}), 400
+        return jsonify({"error": "Invalid email address."}), HTTPStatus.BAD_REQUEST
 
     if len(password) < _MIN_PASSWORD_LENGTH:
-        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), 400
+        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), HTTPStatus.BAD_REQUEST
 
     if not confirm_password:
-        return jsonify({"error": "confirmPassword is required."}), 400
+        return jsonify({"error": "confirmPassword is required."}), HTTPStatus.BAD_REQUEST
 
     if password != confirm_password:
-        return jsonify({"error": "Passwords do not match."}), 400
+        return jsonify({"error": "Passwords do not match."}), HTTPStatus.BAD_REQUEST
 
     if not street or not city or not state or not zip_code:
-        return jsonify({"error": "street, city, state, and zipCode are required."}), 400
+        return jsonify({"error": "street, city, state, and zipCode are required."}), HTTPStatus.BAD_REQUEST
 
     if not _ZIP_RE.match(zip_code):
-        return jsonify({"error": "Zip code must be 5 digits."}), 400
+        return jsonify({"error": "Zip code must be 5 digits."}), HTTPStatus.BAD_REQUEST
 
     try:
         result = auth_service.signup(
@@ -128,10 +129,10 @@ def signup():
     except AuthError as e:
         return _error_response(e)
 
-    response = jsonify({"user": _user_dict(result["user"])}), 201
+    response = jsonify({"user": _user_dict(result["user"])}), HTTPStatus.CREATED
     resp = response[0]
     set_session_cookie(resp, result["session_token"])
-    return resp, 201
+    return resp, HTTPStatus.CREATED
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -151,10 +152,10 @@ def login():
     password = data.get("password")
 
     if not email or not password:
-        return jsonify({"error": "Email and password are required."}), 400
+        return jsonify({"error": "Email and password are required."}), HTTPStatus.BAD_REQUEST
 
     if not _EMAIL_RE.match(email):
-        return jsonify({"error": "Invalid email address."}), 400
+        return jsonify({"error": "Invalid email address."}), HTTPStatus.BAD_REQUEST
 
     try:
         result = auth_service.login(
@@ -168,7 +169,7 @@ def login():
 
     resp = jsonify({"user": _user_dict(result["user"])})
     set_session_cookie(resp, result["session_token"])
-    return resp, 200
+    return resp, HTTPStatus.OK
 
 
 @auth_bp.route("/logout", methods=["POST"])
@@ -184,7 +185,7 @@ def logout():
     auth_service.logout(g.session_token)
     resp = jsonify({"success": True})
     clear_session_cookie(resp)
-    return resp, 200
+    return resp, HTTPStatus.OK
 
 
 @auth_bp.route("/me", methods=["GET"])
@@ -205,7 +206,7 @@ def me():
         "first_name": user["first_name"],
         "last_name": user["last_name"],
         "email_verified": user["email_verified"],
-    }), 200
+    }), HTTPStatus.OK
 
 
 @auth_bp.route("/verify-email", methods=["POST"])
@@ -222,14 +223,14 @@ def verify_email():
     token = data.get("token")
 
     if not token:
-        return jsonify({"error": "Token is required."}), 400
+        return jsonify({"error": "Token is required."}), HTTPStatus.BAD_REQUEST
 
     try:
         auth_service.verify_email(token)
     except AuthError as e:
         return _error_response(e)
 
-    return jsonify({"success": True}), 200
+    return jsonify({"success": True}), HTTPStatus.OK
 
 
 @auth_bp.route("/forgot-password", methods=["POST"])
@@ -245,10 +246,10 @@ def forgot_password():
     email = data.get("email")
 
     if not email:
-        return jsonify({"error": "Email is required."}), 400
+        return jsonify({"error": "Email is required."}), HTTPStatus.BAD_REQUEST
 
     auth_service.request_password_reset(email)
-    return jsonify({"success": True}), 200
+    return jsonify({"success": True}), HTTPStatus.OK
 
 
 @auth_bp.route("/reset-password", methods=["POST"])
@@ -267,23 +268,23 @@ def reset_password():
     confirm_password = data.get("confirmPassword")
 
     if not token or not password:
-        return jsonify({"error": "Token and password are required."}), 400
+        return jsonify({"error": "Token and password are required."}), HTTPStatus.BAD_REQUEST
 
     if len(password) < _MIN_PASSWORD_LENGTH:
-        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), 400
+        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), HTTPStatus.BAD_REQUEST
 
     if not confirm_password:
-        return jsonify({"error": "confirmPassword is required."}), 400
+        return jsonify({"error": "confirmPassword is required."}), HTTPStatus.BAD_REQUEST
 
     if password != confirm_password:
-        return jsonify({"error": "Passwords do not match."}), 400
+        return jsonify({"error": "Passwords do not match."}), HTTPStatus.BAD_REQUEST
 
     try:
         auth_service.reset_password(token, password)
     except AuthError as e:
         return _error_response(e)
 
-    return jsonify({"success": True}), 200
+    return jsonify({"success": True}), HTTPStatus.OK
 
 
 @auth_bp.route("/resend-verification", methods=["POST"])
@@ -303,4 +304,4 @@ def resend_verification():
     except AuthError as e:
         return _error_response(e)
 
-    return jsonify({"success": True}), 200
+    return jsonify({"success": True}), HTTPStatus.OK

@@ -9,6 +9,7 @@ service-layer dependencies and validates auth/role enforcement.
 
 import uuid
 from datetime import datetime, timezone
+from http import HTTPStatus
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -115,7 +116,7 @@ class TestListUsers:
                 mock_db.exec.return_value.all.return_value = mock_user_objs
                 resp = client.get("/api/admin/users")
 
-        assert resp.status_code == 200
+        assert resp.status_code == HTTPStatus.OK
         data = resp.get_json()
         assert "users" in data
         assert "page" in data
@@ -176,14 +177,14 @@ class TestListUsers:
     def test_returns_401_without_auth(self, client):
         """Unauthenticated request returns 401."""
         resp = client.get("/api/admin/users")
-        assert resp.status_code == 401
+        assert resp.status_code == HTTPStatus.UNAUTHORIZED
 
     def test_returns_403_for_non_admin(self, client):
         """Non-admin user returns 403."""
         session_result = _valid_session_result(role=Role.CLIENT)
         with _auth_client(client, session_result):
             resp = client.get("/api/admin/users")
-        assert resp.status_code == 403
+        assert resp.status_code == HTTPStatus.FORBIDDEN
 
 
 # ---------------------------------------------------------------------------
@@ -208,21 +209,21 @@ class TestCreateUser:
 
                 resp = client.post("/api/admin/users", json=_valid_create_user_payload())
 
-        assert resp.status_code == 201
+        assert resp.status_code == HTTPStatus.CREATED
         data = resp.get_json()
         assert data["email"] == "new@test.com"
 
     def test_returns_401_without_auth(self, client):
         """Unauthenticated request returns 401."""
         resp = client.post("/api/admin/users", json=_valid_create_user_payload())
-        assert resp.status_code == 401
+        assert resp.status_code == HTTPStatus.UNAUTHORIZED
 
     def test_returns_403_for_non_admin(self, client):
         """Non-admin user returns 403."""
         session_result = _valid_session_result(role=Role.CLIENT)
         with _auth_client(client, session_result):
             resp = client.post("/api/admin/users", json=_valid_create_user_payload())
-        assert resp.status_code == 403
+        assert resp.status_code == HTTPStatus.FORBIDDEN
 
     def test_missing_email_returns_400(self, client):
         """Missing email returns 400."""
@@ -231,7 +232,7 @@ class TestCreateUser:
         del payload["email"]
         with _auth_client(client, session_result):
             resp = client.post("/api/admin/users", json=payload)
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
 
     def test_missing_password_returns_400(self, client):
         """Missing password returns 400."""
@@ -240,7 +241,7 @@ class TestCreateUser:
         del payload["password"]
         with _auth_client(client, session_result):
             resp = client.post("/api/admin/users", json=payload)
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
 
     def test_missing_first_name_returns_400(self, client):
         """Missing firstName returns 400."""
@@ -249,7 +250,7 @@ class TestCreateUser:
         del payload["firstName"]
         with _auth_client(client, session_result):
             resp = client.post("/api/admin/users", json=payload)
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
 
     def test_missing_last_name_returns_400(self, client):
         """Missing lastName returns 400."""
@@ -258,7 +259,7 @@ class TestCreateUser:
         del payload["lastName"]
         with _auth_client(client, session_result):
             resp = client.post("/api/admin/users", json=payload)
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
 
     def test_missing_role_returns_400(self, client):
         """Missing role returns 400."""
@@ -267,7 +268,7 @@ class TestCreateUser:
         del payload["role"]
         with _auth_client(client, session_result):
             resp = client.post("/api/admin/users", json=payload)
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
 
     def test_invalid_role_returns_400(self, client):
         """Invalid role value returns 400."""
@@ -276,7 +277,7 @@ class TestCreateUser:
             resp = client.post("/api/admin/users", json=_valid_create_user_payload(
                 role="SUPERUSER",
             ))
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
 
     def test_short_password_returns_400(self, client):
         """Password shorter than 8 chars returns 400."""
@@ -285,7 +286,7 @@ class TestCreateUser:
             resp = client.post("/api/admin/users", json=_valid_create_user_payload(
                 password="short", confirmPassword="short",
             ))
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
 
     def test_invalid_email_format_returns_400(self, client):
         """Invalid email format returns 400."""
@@ -294,7 +295,7 @@ class TestCreateUser:
             resp = client.post("/api/admin/users", json=_valid_create_user_payload(
                 email="not-an-email",
             ))
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
         assert "email" in resp.get_json()["error"].lower()
 
     def test_missing_confirm_password_returns_400(self, client):
@@ -304,7 +305,7 @@ class TestCreateUser:
         del payload["confirmPassword"]
         with _auth_client(client, session_result):
             resp = client.post("/api/admin/users", json=payload)
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
 
     def test_confirm_password_mismatch_returns_400(self, client):
         """Mismatched confirmPassword returns 400."""
@@ -313,7 +314,7 @@ class TestCreateUser:
             resp = client.post("/api/admin/users", json=_valid_create_user_payload(
                 confirmPassword="differentpassword",
             ))
-        assert resp.status_code == 400
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
         assert "match" in resp.get_json()["error"].lower()
 
     def test_duplicate_email_returns_409(self, client):
@@ -331,7 +332,7 @@ class TestCreateUser:
                     email="dupe@test.com",
                 ))
 
-        assert resp.status_code == 409
+        assert resp.status_code == HTTPStatus.CONFLICT
         assert resp.get_json()["code"] == "EMAIL_TAKEN"
 
 
@@ -350,7 +351,7 @@ class TestRevokeSessions:
         with _auth_client(client, session_result):
             with patch("app.blueprints.admin.revoke_all_user_sessions") as mock_revoke:
                 resp = client.post(f"/api/admin/users/{user_id}/revoke-sessions")
-        assert resp.status_code == 200
+        assert resp.status_code == HTTPStatus.OK
         assert resp.get_json()["success"] is True
         mock_revoke.assert_called_once_with(user_id)
 
@@ -358,7 +359,7 @@ class TestRevokeSessions:
         """Unauthenticated request returns 401."""
         user_id = uuid.uuid4()
         resp = client.post(f"/api/admin/users/{user_id}/revoke-sessions")
-        assert resp.status_code == 401
+        assert resp.status_code == HTTPStatus.UNAUTHORIZED
 
     def test_returns_403_for_non_admin(self, client):
         """Non-admin user returns 403."""
@@ -366,11 +367,11 @@ class TestRevokeSessions:
         session_result = _valid_session_result(role=Role.CLIENT)
         with _auth_client(client, session_result):
             resp = client.post(f"/api/admin/users/{user_id}/revoke-sessions")
-        assert resp.status_code == 403
+        assert resp.status_code == HTTPStatus.FORBIDDEN
 
     def test_invalid_uuid_returns_404(self, client):
         """Invalid UUID format returns 404."""
         session_result = _valid_session_result(role=Role.ADMIN)
         with _auth_client(client, session_result):
             resp = client.post("/api/admin/users/not-a-uuid/revoke-sessions")
-        assert resp.status_code == 404
+        assert resp.status_code == HTTPStatus.NOT_FOUND
