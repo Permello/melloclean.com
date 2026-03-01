@@ -8,9 +8,11 @@ access based on user roles.
 """
 
 from functools import wraps
+from http import HTTPStatus
 
-from flask import g, jsonify, request
+from flask import g, request
 
+from app.response import error
 from app.services.session_service import validate_session
 
 COOKIE_NAME = "mello_session"
@@ -30,12 +32,12 @@ def require_auth(fn):
         token = request.cookies.get(COOKIE_NAME)
 
         if token is None:
-            return jsonify({"error": "Authentication required"}), 401
+            return error("AUTH_REQUIRED", "Authentication required", HTTPStatus.UNAUTHORIZED)
 
         result = validate_session(token)
 
         if result is None:
-            return jsonify({"error": "Authentication required"}), 401
+            return error("AUTH_REQUIRED", "Authentication required", HTTPStatus.UNAUTHORIZED)
 
         g.user = result["user"]
         g.session_token = token
@@ -62,7 +64,7 @@ def require_role(*allowed_roles):
             user_role = role.value if hasattr(role, "value") else str(role)
 
             if user_role not in allowed_roles:
-                return jsonify({"error": "Forbidden"}), 403
+                return error("FORBIDDEN", "Forbidden", HTTPStatus.FORBIDDEN)
 
             return fn(*args, **kwargs)
 
