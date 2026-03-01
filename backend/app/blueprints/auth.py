@@ -15,6 +15,7 @@ from flask import Blueprint, g, jsonify, request
 from app.errors import AuthError
 from app.middleware import set_session_cookie, clear_session_cookie
 from app.middleware.auth import require_auth
+from app.response import error, success, success_action, validation_error
 from app.services import auth_service
 
 auth_bp = Blueprint("auth", __name__)
@@ -45,7 +46,7 @@ def _error_response(err: AuthError):
         A tuple of (response, status_code).
     """
     status = _ERROR_STATUS.get(err.code, HTTPStatus.BAD_REQUEST)
-    return jsonify({"error": err.message, "code": err.code}), status
+    return error(err.code, err.message, status)
 
 
 def _user_dict(user):
@@ -92,26 +93,41 @@ def signup():
     state = data.get("state")
     zip_code = data.get("zipCode")
 
-    if not email or not password or not first_name or not last_name:
-        return jsonify({"error": "Email, password, firstName, and lastName are required."}), HTTPStatus.BAD_REQUEST
+    errors = []
 
-    if not _EMAIL_RE.match(email):
-        return jsonify({"error": "Invalid email address."}), HTTPStatus.BAD_REQUEST
+    if not email:
+        errors.append({"field": "email", "issue": "Required"})
+    if email and not _EMAIL_RE.match(email):
+        errors.append({"field": "email", "issue": "Invalid format"})
 
-    if len(password) < _MIN_PASSWORD_LENGTH:
-        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), HTTPStatus.BAD_REQUEST
+    if not password:
+        errors.append({"field": "password", "issue": "Required"})
+    if password and len(password) < _MIN_PASSWORD_LENGTH:
+        errors.append({"field": "password", "issue": f"Must be at least {_MIN_PASSWORD_LENGTH} characters"})
+
+    if not first_name:
+        errors.append({"field": "firstName", "issue": "Required"})
+    if not last_name:
+        errors.append({"field": "lastName", "issue": "Required"})
 
     if not confirm_password:
-        return jsonify({"error": "confirmPassword is required."}), HTTPStatus.BAD_REQUEST
+        errors.append({"field": "confirmPassword", "issue": "Required"})
+    if confirm_password and password and password != confirm_password:
+        errors.append({"field": "confirmPassword", "issue": "Passwords do not match"})
 
-    if password != confirm_password:
-        return jsonify({"error": "Passwords do not match."}), HTTPStatus.BAD_REQUEST
+    if not street:
+        errors.append({"field": "street", "issue": "Required"})
+    if not city:
+        errors.append({"field": "city", "issue": "Required"})
+    if not state:
+        errors.append({"field": "state", "issue": "Required"})
+    if not zip_code:
+        errors.append({"field": "zipCode", "issue": "Required"})
+    if zip_code and not _ZIP_RE.match(zip_code):
+        errors.append({"field": "zipCode", "issue": "Must be 5 digits"})
 
-    if not street or not city or not state or not zip_code:
-        return jsonify({"error": "street, city, state, and zipCode are required."}), HTTPStatus.BAD_REQUEST
-
-    if not _ZIP_RE.match(zip_code):
-        return jsonify({"error": "Zip code must be 5 digits."}), HTTPStatus.BAD_REQUEST
+    if errors:
+        return validation_error(errors)
 
     try:
         result = auth_service.signup(
@@ -129,8 +145,7 @@ def signup():
     except AuthError as e:
         return _error_response(e)
 
-    response = jsonify({"user": _user_dict(result["user"])}), HTTPStatus.CREATED
-    resp = response[0]
+    resp = jsonify({"data": {"user": _user_dict(result["user"])}})
     set_session_cookie(resp, result["session_token"])
     return resp, HTTPStatus.CREATED
 
@@ -151,11 +166,17 @@ def login():
     email = data.get("email")
     password = data.get("password")
 
-    if not email or not password:
-        return jsonify({"error": "Email and password are required."}), HTTPStatus.BAD_REQUEST
+    errors = []
 
-    if not _EMAIL_RE.match(email):
-        return jsonify({"error": "Invalid email address."}), HTTPStatus.BAD_REQUEST
+    if not email:
+        errors.append({"field": "email", "issue": "Required"})
+    if email and not _EMAIL_RE.match(email):
+        errors.append({"field": "email", "issue": "Invalid format"})
+    if not password:
+        errors.append({"field": "password", "issue": "Required"})
+
+    if errors:
+        return validation_error(errors)
 
     try:
         result = auth_service.login(
@@ -167,7 +188,7 @@ def login():
     except AuthError as e:
         return _error_response(e)
 
-    resp = jsonify({"user": _user_dict(result["user"])})
+    resp = jsonify({"data": {"user": _user_dict(result["user"])}})
     set_session_cookie(resp, result["session_token"])
     return resp, HTTPStatus.OK
 
@@ -183,7 +204,7 @@ def logout():
         200 with success on success, 401 if not authenticated.
     """
     auth_service.logout(g.session_token)
-    resp = jsonify({"success": True})
+    resp = jsonify({"data": {"status": "completed"}})
     clear_session_cookie(resp)
     return resp, HTTPStatus.OK
 
@@ -201,12 +222,12 @@ def me():
         200 with user info on success, 401 if not authenticated.
     """
     user = g.user
-    return jsonify({
+    return success({
         "email": user["email"],
         "first_name": user["first_name"],
         "last_name": user["last_name"],
         "email_verified": user["email_verified"],
-    }), HTTPStatus.OK
+    })
 
 
 @auth_bp.route("/verify-email", methods=["POST"])
@@ -223,14 +244,14 @@ def verify_email():
     token = data.get("token")
 
     if not token:
-        return jsonify({"error": "Token is required."}), HTTPStatus.BAD_REQUEST
+        return validation_error([{"field": "token", "issue": "Required"}])
 
     try:
         auth_service.verify_email(token)
     except AuthError as e:
         return _error_response(e)
 
-    return jsonify({"success": True}), HTTPStatus.OK
+    return success_action()
 
 
 @auth_bp.route("/forgot-password", methods=["POST"])
@@ -246,10 +267,10 @@ def forgot_password():
     email = data.get("email")
 
     if not email:
-        return jsonify({"error": "Email is required."}), HTTPStatus.BAD_REQUEST
+        return validation_error([{"field": "email", "issue": "Required"}])
 
     auth_service.request_password_reset(email)
-    return jsonify({"success": True}), HTTPStatus.OK
+    return success_action()
 
 
 @auth_bp.route("/reset-password", methods=["POST"])
@@ -267,24 +288,28 @@ def reset_password():
     password = data.get("password")
     confirm_password = data.get("confirmPassword")
 
-    if not token or not password:
-        return jsonify({"error": "Token and password are required."}), HTTPStatus.BAD_REQUEST
+    errors = []
 
-    if len(password) < _MIN_PASSWORD_LENGTH:
-        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), HTTPStatus.BAD_REQUEST
-
+    if not token:
+        errors.append({"field": "token", "issue": "Required"})
+    if not password:
+        errors.append({"field": "password", "issue": "Required"})
+    if password and len(password) < _MIN_PASSWORD_LENGTH:
+        errors.append({"field": "password", "issue": f"Must be at least {_MIN_PASSWORD_LENGTH} characters"})
     if not confirm_password:
-        return jsonify({"error": "confirmPassword is required."}), HTTPStatus.BAD_REQUEST
+        errors.append({"field": "confirmPassword", "issue": "Required"})
+    if confirm_password and password and password != confirm_password:
+        errors.append({"field": "confirmPassword", "issue": "Passwords do not match"})
 
-    if password != confirm_password:
-        return jsonify({"error": "Passwords do not match."}), HTTPStatus.BAD_REQUEST
+    if errors:
+        return validation_error(errors)
 
     try:
         auth_service.reset_password(token, password)
     except AuthError as e:
         return _error_response(e)
 
-    return jsonify({"success": True}), HTTPStatus.OK
+    return success_action()
 
 
 @auth_bp.route("/resend-verification", methods=["POST"])
@@ -304,4 +329,4 @@ def resend_verification():
     except AuthError as e:
         return _error_response(e)
 
-    return jsonify({"success": True}), HTTPStatus.OK
+    return success_action()

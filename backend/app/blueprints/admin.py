@@ -18,6 +18,7 @@ from app.database import get_session
 from app.middleware.auth import require_auth, require_role
 from app.models.enums import Role
 from app.models.user import User
+from app.response import error, paginated, success, success_action, validation_error
 from app.services.session_service import revoke_all_user_sessions
 from app.utils.password import hash_password
 
@@ -82,12 +83,12 @@ def list_users():
             users = db.exec(
                 select(User).order_by(User.created_at.desc())
             ).all()
-            return jsonify({
-                "users": [_user_dict(u) for u in users],
-                "page": 1,
-                "per_page": len(users),
-                "total": len(users),
-            }), HTTPStatus.OK
+            return paginated(
+                [_user_dict(u) for u in users],
+                page=1,
+                page_size=len(users),
+                total=len(users),
+            )
 
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", _DEFAULT_PER_PAGE, type=int)
@@ -103,12 +104,12 @@ def list_users():
             .limit(per_page)
         ).all()
 
-        return jsonify({
-            "users": [_user_dict(u) for u in users],
-            "page": page,
-            "per_page": per_page,
-            "total": total,
-        }), HTTPStatus.OK
+        return paginated(
+            [_user_dict(u) for u in users],
+            page=page,
+            page_size=per_page,
+            total=total,
+        )
 
 
 @admin_bp.route("/users", methods=["POST"])
@@ -134,30 +135,42 @@ def create_user():
     last_name = data.get("lastName")
     role_str = data.get("role")
 
-    if not email or not password or not first_name or not last_name or not role_str:
-        return jsonify({"error": "Email, password, firstName, lastName, and role are required."}), HTTPStatus.BAD_REQUEST
+    errors = []
 
-    if not _EMAIL_RE.match(email):
-        return jsonify({"error": "Invalid email address."}), HTTPStatus.BAD_REQUEST
+    if not email:
+        errors.append({"field": "email", "issue": "Required"})
+    if email and not _EMAIL_RE.match(email):
+        errors.append({"field": "email", "issue": "Invalid format"})
 
-    if len(password) < _MIN_PASSWORD_LENGTH:
-        return jsonify({"error": f"Password must be at least {_MIN_PASSWORD_LENGTH} characters."}), HTTPStatus.BAD_REQUEST
+    if not password:
+        errors.append({"field": "password", "issue": "Required"})
+    if password and len(password) < _MIN_PASSWORD_LENGTH:
+        errors.append({"field": "password", "issue": f"Must be at least {_MIN_PASSWORD_LENGTH} characters"})
+
+    if not first_name:
+        errors.append({"field": "firstName", "issue": "Required"})
+    if not last_name:
+        errors.append({"field": "lastName", "issue": "Required"})
 
     if not confirm_password:
-        return jsonify({"error": "confirmPassword is required."}), HTTPStatus.BAD_REQUEST
+        errors.append({"field": "confirmPassword", "issue": "Required"})
+    if confirm_password and password and password != confirm_password:
+        errors.append({"field": "confirmPassword", "issue": "Passwords do not match"})
 
-    if password != confirm_password:
-        return jsonify({"error": "Passwords do not match."}), HTTPStatus.BAD_REQUEST
+    if not role_str:
+        errors.append({"field": "role", "issue": "Required"})
+    if role_str and role_str not in _VALID_ROLES:
+        errors.append({"field": "role", "issue": f"Must be one of: {', '.join(sorted(_VALID_ROLES))}"})
 
-    if role_str not in _VALID_ROLES:
-        return jsonify({"error": f"Invalid role. Must be one of: {', '.join(sorted(_VALID_ROLES))}."}), HTTPStatus.BAD_REQUEST
+    if errors:
+        return validation_error(errors)
 
     email = email.lower()
 
     with get_session() as db:
         existing = db.exec(select(User).where(User.email == email)).first()
         if existing is not None:
-            return jsonify({"error": "A user with this email already exists.", "code": "EMAIL_TAKEN"}), HTTPStatus.CONFLICT
+            return error("EMAIL_TAKEN", "A user with this email already exists.", HTTPStatus.CONFLICT)
 
         user = User(
             email=email,
@@ -171,7 +184,7 @@ def create_user():
         db.commit()
         db.refresh(user)
 
-        return jsonify(_user_dict(user)), HTTPStatus.CREATED
+        return success(_user_dict(user), 201)
 
 
 @admin_bp.route("/users/<user_id>/revoke-sessions", methods=["POST"])
@@ -193,7 +206,7 @@ def revoke_sessions(user_id):
     try:
         uid = uuid.UUID(user_id)
     except ValueError:
-        return jsonify({"error": "Invalid user ID."}), HTTPStatus.NOT_FOUND
+        return error("INVALID_USER_ID", "Invalid user ID.", HTTPStatus.NOT_FOUND)
 
     revoke_all_user_sessions(uid)
-    return jsonify({"success": True}), HTTPStatus.OK
+    return success_action()

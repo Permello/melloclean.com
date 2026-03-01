@@ -127,9 +127,9 @@ class TestSignup:
             resp = client.post("/api/auth/signup", json=_valid_signup_payload())
         assert resp.status_code == HTTPStatus.CREATED
         data = resp.get_json()
-        assert data["user"]["email"] == "new@test.com"
-        assert "id" not in data["user"]
-        assert "role" not in data["user"]
+        assert data["data"]["user"]["email"] == "new@test.com"
+        assert "id" not in data["data"]["user"]
+        assert "role" not in data["data"]["user"]
         cookie = _get_cookie(resp, COOKIE_NAME)
         assert cookie is not None
         assert cookie.value == "raw-tok"
@@ -163,12 +163,15 @@ class TestSignup:
             assert call_kwargs["zip_code"] == "62701"
 
     def test_missing_email_returns_400(self, client):
-        """Signup without email returns 400."""
+        """Signup without email returns 400 with validation details."""
         payload = _valid_signup_payload()
         del payload["email"]
         resp = client.post("/api/auth/signup", json=payload)
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert "error" in resp.get_json()
+        data = resp.get_json()
+        assert data["error"]["code"] == "VALIDATION_FAILED"
+        fields = [d["field"] for d in data["error"]["details"]]
+        assert "email" in fields
 
     def test_missing_password_returns_400(self, client):
         """Signup without password returns 400."""
@@ -204,7 +207,10 @@ class TestSignup:
             confirmPassword="differentpassword",
         ))
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert "match" in resp.get_json()["error"].lower()
+        data = resp.get_json()
+        details = data["error"]["details"]
+        match_issues = [d for d in details if d["field"] == "confirmPassword"]
+        assert any("match" in d["issue"].lower() for d in match_issues)
 
     def test_invalid_email_format_returns_400(self, client):
         """Invalid email format returns 400."""
@@ -212,7 +218,10 @@ class TestSignup:
             email="not-an-email",
         ))
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert "email" in resp.get_json()["error"].lower()
+        data = resp.get_json()
+        details = data["error"]["details"]
+        email_issues = [d for d in details if d["field"] == "email"]
+        assert len(email_issues) > 0
 
     def test_missing_address_fields_returns_400(self, client):
         """Missing address fields returns 400."""
@@ -230,7 +239,10 @@ class TestSignup:
             zipCode="1234",
         ))
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert "zip" in resp.get_json()["error"].lower()
+        data = resp.get_json()
+        details = data["error"]["details"]
+        zip_issues = [d for d in details if d["field"] == "zipCode"]
+        assert len(zip_issues) > 0
 
     def test_duplicate_email_returns_409(self, client):
         """EMAIL_TAKEN error returns 409."""
@@ -243,7 +255,19 @@ class TestSignup:
             ))
         assert resp.status_code == HTTPStatus.CONFLICT
         data = resp.get_json()
-        assert data["code"] == "EMAIL_TAKEN"
+        assert data["error"]["code"] == "EMAIL_TAKEN"
+
+    def test_collects_all_validation_errors(self, client):
+        """Signup with multiple invalid fields returns all errors at once."""
+        resp = client.post("/api/auth/signup", json={})
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
+        data = resp.get_json()
+        assert data["error"]["code"] == "VALIDATION_FAILED"
+        fields = [d["field"] for d in data["error"]["details"]]
+        assert "email" in fields
+        assert "password" in fields
+        assert "firstName" in fields
+        assert "lastName" in fields
 
 
 # ---------------------------------------------------------------------------
@@ -266,9 +290,9 @@ class TestLogin:
             })
         assert resp.status_code == HTTPStatus.OK
         data = resp.get_json()
-        assert data["user"]["email"] == "login@test.com"
-        assert "id" not in data["user"]
-        assert "role" not in data["user"]
+        assert data["data"]["user"]["email"] == "login@test.com"
+        assert "id" not in data["data"]["user"]
+        assert "role" not in data["data"]["user"]
         cookie = _get_cookie(resp, COOKIE_NAME)
         assert cookie is not None
         assert cookie.value == "raw-tok"
@@ -309,7 +333,10 @@ class TestLogin:
             "password": "strongpassword",
         })
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert "email" in resp.get_json()["error"].lower()
+        data = resp.get_json()
+        details = data["error"]["details"]
+        email_issues = [d for d in details if d["field"] == "email"]
+        assert len(email_issues) > 0
 
     def test_invalid_credentials_returns_401(self, client):
         """INVALID_CREDENTIALS error returns 401."""
@@ -323,7 +350,7 @@ class TestLogin:
             })
         assert resp.status_code == HTTPStatus.UNAUTHORIZED
         data = resp.get_json()
-        assert data["code"] == "INVALID_CREDENTIALS"
+        assert data["error"]["code"] == "INVALID_CREDENTIALS"
 
 
 # ---------------------------------------------------------------------------
@@ -342,7 +369,7 @@ class TestLogout:
                 resp = client.post("/api/auth/logout")
         assert resp.status_code == HTTPStatus.OK
         data = resp.get_json()
-        assert data["success"] is True
+        assert data["data"]["status"] == "completed"
         cookie = _get_cookie(resp, COOKIE_NAME)
         assert cookie is not None
         assert cookie["max-age"] == "0"
@@ -384,12 +411,12 @@ class TestMe:
             resp = client.get("/api/auth/me")
         assert resp.status_code == HTTPStatus.OK
         data = resp.get_json()
-        assert data["email"] == "me@test.com"
-        assert data["first_name"] == "Jane"
-        assert data["last_name"] == "Doe"
-        assert data["email_verified"] is True
-        assert "id" not in data
-        assert "role" not in data
+        assert data["data"]["email"] == "me@test.com"
+        assert data["data"]["first_name"] == "Jane"
+        assert data["data"]["last_name"] == "Doe"
+        assert data["data"]["email_verified"] is True
+        assert "id" not in data["data"]
+        assert "role" not in data["data"]
 
     def test_returns_401_without_auth(self, client):
         """Unauthenticated /me returns 401."""
@@ -412,7 +439,7 @@ class TestVerifyEmail:
                 "token": "valid-token",
             })
         assert resp.status_code == HTTPStatus.OK
-        assert resp.get_json()["success"] is True
+        assert resp.get_json()["data"]["status"] == "completed"
         mock_svc.verify_email.assert_called_once_with("valid-token")
 
     def test_missing_token_returns_400(self, client):
@@ -431,7 +458,7 @@ class TestVerifyEmail:
             })
         assert resp.status_code == HTTPStatus.BAD_REQUEST
         data = resp.get_json()
-        assert data["code"] == "INVALID_TOKEN"
+        assert data["error"]["code"] == "INVALID_TOKEN"
 
     def test_expired_token_returns_400(self, client):
         """TOKEN_EXPIRED error returns 400."""
@@ -444,7 +471,7 @@ class TestVerifyEmail:
             })
         assert resp.status_code == HTTPStatus.BAD_REQUEST
         data = resp.get_json()
-        assert data["code"] == "TOKEN_EXPIRED"
+        assert data["error"]["code"] == "TOKEN_EXPIRED"
 
 
 # ---------------------------------------------------------------------------
@@ -462,7 +489,7 @@ class TestForgotPassword:
                 "email": "any@test.com",
             })
         assert resp.status_code == HTTPStatus.OK
-        assert resp.get_json()["success"] is True
+        assert resp.get_json()["data"]["status"] == "completed"
         mock_svc.request_password_reset.assert_called_once_with("any@test.com")
 
     def test_missing_email_returns_400(self, client):
@@ -488,7 +515,7 @@ class TestResetPassword:
                 "confirmPassword": "newstrongpassword",
             })
         assert resp.status_code == HTTPStatus.OK
-        assert resp.get_json()["success"] is True
+        assert resp.get_json()["data"]["status"] == "completed"
         mock_svc.reset_password.assert_called_once_with(
             "valid-token", "newstrongpassword"
         )
@@ -533,7 +560,10 @@ class TestResetPassword:
             "confirmPassword": "differentpassword",
         })
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert "match" in resp.get_json()["error"].lower()
+        data = resp.get_json()
+        details = data["error"]["details"]
+        match_issues = [d for d in details if d["field"] == "confirmPassword"]
+        assert any("match" in d["issue"].lower() for d in match_issues)
 
     def test_invalid_token_returns_400(self, client):
         """INVALID_TOKEN error returns 400."""
@@ -547,7 +577,7 @@ class TestResetPassword:
                 "confirmPassword": "newstrongpassword",
             })
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert resp.get_json()["code"] == "INVALID_TOKEN"
+        assert resp.get_json()["error"]["code"] == "INVALID_TOKEN"
 
     def test_expired_token_returns_400(self, client):
         """TOKEN_EXPIRED error returns 400."""
@@ -561,7 +591,7 @@ class TestResetPassword:
                 "confirmPassword": "newstrongpassword",
             })
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert resp.get_json()["code"] == "TOKEN_EXPIRED"
+        assert resp.get_json()["error"]["code"] == "TOKEN_EXPIRED"
 
 
 # ---------------------------------------------------------------------------
@@ -580,7 +610,7 @@ class TestResendVerification:
             with patch("app.blueprints.auth.auth_service") as mock_svc:
                 resp = client.post("/api/auth/resend-verification")
         assert resp.status_code == HTTPStatus.OK
-        assert resp.get_json()["success"] is True
+        assert resp.get_json()["data"]["status"] == "completed"
         mock_svc.resend_verification_email.assert_called_once_with(user_id)
 
     def test_returns_401_without_auth(self, client):
@@ -598,4 +628,4 @@ class TestResendVerification:
                 )
                 resp = client.post("/api/auth/resend-verification")
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert resp.get_json()["code"] == "ALREADY_VERIFIED"
+        assert resp.get_json()["error"]["code"] == "ALREADY_VERIFIED"

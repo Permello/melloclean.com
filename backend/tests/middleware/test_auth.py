@@ -68,7 +68,9 @@ class TestRequireAuth:
         with app.test_client() as client:
             resp = client.get("/auth-only")
             assert resp.status_code == HTTPStatus.UNAUTHORIZED
-            assert resp.get_json()["error"] == "Authentication required"
+            data = resp.get_json()
+            assert data["error"]["code"] == "AUTH_REQUIRED"
+            assert data["error"]["message"] == "Authentication required"
 
     def test_returns_401_when_session_invalid(self):
         """Request with an invalid/expired token should get 401."""
@@ -78,7 +80,9 @@ class TestRequireAuth:
                 client.set_cookie("mello_session", "bad-token")
                 resp = client.get("/auth-only")
                 assert resp.status_code == HTTPStatus.UNAUTHORIZED
-                assert resp.get_json()["error"] == "Authentication required"
+                data = resp.get_json()
+                assert data["error"]["code"] == "AUTH_REQUIRED"
+                assert data["error"]["message"] == "Authentication required"
 
     def test_sets_g_user_and_g_session_token(self):
         """Valid session should set g.user and g.session_token."""
@@ -118,7 +122,9 @@ class TestRequireRole:
                 client.set_cookie("mello_session", "valid-token")
                 resp = client.get("/admin-only")
                 assert resp.status_code == HTTPStatus.FORBIDDEN
-                assert resp.get_json()["error"] == "Forbidden"
+                data = resp.get_json()
+                assert data["error"]["code"] == "FORBIDDEN"
+                assert data["error"]["message"] == "Forbidden"
 
     def test_passes_for_matching_role(self):
         """ADMIN accessing an ADMIN-only route should succeed."""
@@ -162,4 +168,6 @@ class TestRequireRole:
                 client.set_cookie("mello_session", "valid-token")
                 resp = client.get("/worker-or-admin")
                 assert resp.status_code == HTTPStatus.FORBIDDEN
-                assert resp.get_json()["error"] == "Forbidden"
+                data = resp.get_json()
+                assert data["error"]["code"] == "FORBIDDEN"
+                assert data["error"]["message"] == "Forbidden"

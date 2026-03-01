@@ -118,14 +118,15 @@ class TestListUsers:
 
         assert resp.status_code == HTTPStatus.OK
         data = resp.get_json()
-        assert "users" in data
-        assert "page" in data
-        assert "per_page" in data
-        assert "total" in data
-        assert len(data["users"]) == 2
+        assert "data" in data
+        assert "meta" in data
+        assert data["meta"]["page"] is not None
+        assert data["meta"]["pageSize"] is not None
+        assert data["meta"]["total"] is not None
+        assert len(data["data"]) == 2
 
     def test_pagination_defaults(self, client):
-        """Default pagination returns page 1 with per_page 25."""
+        """Default pagination returns page 1 with pageSize 25."""
         session_result = _valid_session_result(role=Role.ADMIN)
         mock_user_objs = self._mock_user_objs(2)
         with _auth_client(client, session_result):
@@ -137,8 +138,8 @@ class TestListUsers:
                 resp = client.get("/api/admin/users")
 
         data = resp.get_json()
-        assert data["page"] == 1
-        assert data["per_page"] == 25
+        assert data["meta"]["page"] == 1
+        assert data["meta"]["pageSize"] == 25
 
     def test_pagination_custom(self, client):
         """Custom page and per_page are reflected in response."""
@@ -153,8 +154,8 @@ class TestListUsers:
                 resp = client.get("/api/admin/users?page=2&per_page=10")
 
         data = resp.get_json()
-        assert data["page"] == 2
-        assert data["per_page"] == 10
+        assert data["meta"]["page"] == 2
+        assert data["meta"]["pageSize"] == 10
 
     def test_all_flag(self, client):
         """?all=true returns all users without pagination."""
@@ -169,10 +170,10 @@ class TestListUsers:
                 resp = client.get("/api/admin/users?all=true")
 
         data = resp.get_json()
-        assert data["page"] == 1
-        assert data["per_page"] == 3
-        assert data["total"] == 3
-        assert len(data["users"]) == 3
+        assert data["meta"]["page"] == 1
+        assert data["meta"]["pageSize"] == 3
+        assert data["meta"]["total"] == 3
+        assert len(data["data"]) == 3
 
     def test_returns_401_without_auth(self, client):
         """Unauthenticated request returns 401."""
@@ -211,7 +212,7 @@ class TestCreateUser:
 
         assert resp.status_code == HTTPStatus.CREATED
         data = resp.get_json()
-        assert data["email"] == "new@test.com"
+        assert data["data"]["email"] == "new@test.com"
 
     def test_returns_401_without_auth(self, client):
         """Unauthenticated request returns 401."""
@@ -296,7 +297,10 @@ class TestCreateUser:
                 email="not-an-email",
             ))
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert "email" in resp.get_json()["error"].lower()
+        data = resp.get_json()
+        details = data["error"]["details"]
+        email_issues = [d for d in details if d["field"] == "email"]
+        assert len(email_issues) > 0
 
     def test_missing_confirm_password_returns_400(self, client):
         """Missing confirmPassword returns 400."""
@@ -315,7 +319,10 @@ class TestCreateUser:
                 confirmPassword="differentpassword",
             ))
         assert resp.status_code == HTTPStatus.BAD_REQUEST
-        assert "match" in resp.get_json()["error"].lower()
+        data = resp.get_json()
+        details = data["error"]["details"]
+        match_issues = [d for d in details if d["field"] == "confirmPassword"]
+        assert any("match" in d["issue"].lower() for d in match_issues)
 
     def test_duplicate_email_returns_409(self, client):
         """Duplicate email returns 409."""
@@ -333,7 +340,22 @@ class TestCreateUser:
                 ))
 
         assert resp.status_code == HTTPStatus.CONFLICT
-        assert resp.get_json()["code"] == "EMAIL_TAKEN"
+        assert resp.get_json()["error"]["code"] == "EMAIL_TAKEN"
+
+    def test_collects_all_validation_errors(self, client):
+        """Create user with multiple invalid fields returns all errors at once."""
+        session_result = _valid_session_result(role=Role.ADMIN)
+        with _auth_client(client, session_result):
+            resp = client.post("/api/admin/users", json={})
+        assert resp.status_code == HTTPStatus.BAD_REQUEST
+        data = resp.get_json()
+        assert data["error"]["code"] == "VALIDATION_FAILED"
+        fields = [d["field"] for d in data["error"]["details"]]
+        assert "email" in fields
+        assert "password" in fields
+        assert "firstName" in fields
+        assert "lastName" in fields
+        assert "role" in fields
 
 
 # ---------------------------------------------------------------------------
@@ -352,7 +374,7 @@ class TestRevokeSessions:
             with patch("app.blueprints.admin.revoke_all_user_sessions") as mock_revoke:
                 resp = client.post(f"/api/admin/users/{user_id}/revoke-sessions")
         assert resp.status_code == HTTPStatus.OK
-        assert resp.get_json()["success"] is True
+        assert resp.get_json()["data"]["status"] == "completed"
         mock_revoke.assert_called_once_with(user_id)
 
     def test_returns_401_without_auth(self, client):
