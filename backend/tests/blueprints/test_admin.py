@@ -37,6 +37,7 @@ def _valid_session_result(role=Role.ADMIN, **user_overrides):
             "last_name": user_overrides.get("last_name", "User"),
             "role": role,
             "email_verified": user_overrides.get("email_verified", True),
+            "created_at": datetime.now(tz=timezone.utc),
         },
     }
 
@@ -100,7 +101,7 @@ class TestListUsers:
             obj.role = MagicMock()
             obj.role.value = "CLIENT"
             obj.email_verified = i == 0
-            obj.created_at = datetime(2026, 1, i + 1, tzinfo=timezone.utc)
+            obj.created_at = datetime.now(tz=timezone.utc)
             objs.append(obj)
         return objs
 
