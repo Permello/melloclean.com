@@ -411,12 +411,12 @@ class TestMe:
             resp = client.get("/api/auth/me")
         assert resp.status_code == HTTPStatus.OK
         data = resp.get_json()
+        assert data["data"]["id"] == str(user_id)
         assert data["data"]["email"] == "me@test.com"
         assert data["data"]["first_name"] == "Jane"
         assert data["data"]["last_name"] == "Doe"
+        assert data["data"]["role"] == "CLIENT"
         assert data["data"]["email_verified"] is True
-        assert "id" not in data["data"]
-        assert "role" not in data["data"]
 
     def test_returns_401_without_auth(self, client):
         """Unauthenticated /me returns 401."""

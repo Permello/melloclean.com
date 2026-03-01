@@ -215,17 +215,19 @@ def me():
     """Return the current authenticated user's profile.
 
     Requires authentication. Returns the user dict from g.user which
-    was populated by the @require_auth decorator. Excludes id and role
-    since the frontend does not need them.
+    was populated by the @require_auth decorator.
 
     Returns:
         200 with user info on success, 401 if not authenticated.
     """
     user = g.user
+    role = user["role"].value if hasattr(user["role"], "value") else str(user["role"])
     return success({
+        "id": str(user["id"]),
         "email": user["email"],
         "first_name": user["first_name"],
         "last_name": user["last_name"],
+        "role": role,
         "email_verified": user["email_verified"],
     })
 
