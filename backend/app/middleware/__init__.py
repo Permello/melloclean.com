@@ -12,11 +12,12 @@ Exports:
 """
 
 import os
+from datetime import timedelta
 
 from app.middleware.auth import require_auth, require_role
 
 COOKIE_NAME = "mello_session"
-SESSION_MAX_AGE = 30 * 24 * 60 * 60  # 30 days in seconds
+SESSION_MAX_AGE = int(timedelta(days=30).total_seconds())
 
 
 def set_session_cookie(response, token):
