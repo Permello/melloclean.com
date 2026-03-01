@@ -146,7 +146,7 @@ def create_user():
         db.commit()
         db.refresh(user)
 
-        return success(serialize_user(user), 201)
+        return success(serialize_user(user), HTTPStatus.CREATED)
 
 
 @admin_bp.route("/users/<user_id>/revoke-sessions", methods=["POST"])
