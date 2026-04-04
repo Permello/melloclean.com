@@ -13,6 +13,8 @@ export interface ActionData {
   errors?: ValidationErrors;
   /** Whether signup was successful */
   success?: boolean;
+  /** Server-level error message (e.g. duplicate email, network failure) */
+  serverError?: string;
 }
 
 /**

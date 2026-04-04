@@ -3,9 +3,11 @@
  * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
  */
 
-import { Form, Link } from 'react-router';
+import { Form, Link, redirect } from 'react-router';
+import type { AuthResponse, ApiError, ApiValidationError } from '~/core/api';
 import { Text } from '~/components/ui/text';
 import { Wizard, type WizardStageConfig } from '~/components/ui/wizard';
+import { validators, validateForm } from '~/core/util/validation';
 import { AuthLayout } from '../components/auth-layout';
 import { SocialButtons } from '../components/social-buttons';
 import type { Route } from './+types/join';
@@ -19,21 +21,73 @@ import type { ActionData, SignupFormData } from './ts/types';
 const signUpStages: WizardStageConfig[] = [ACCOUNT_CONFIG, ADDRESS_CONFIG];
 
 /**
- * Server action to handle signup form submission.
- * Processes the completed wizard form data.
+ * Client loader that redirects already-authenticated users to the dashboard.
+ * Calls `/api/auth/me` — if the server returns 200, the user is logged in.
  *
- * @param args - Route action arguments
- * @returns Action response with success status
+ * @returns null when the user is not authenticated
  */
-export async function action({ request }: Route.ActionArgs): Promise<ActionData> {
+export async function clientLoader(): Promise<null> {
+  const response = await fetch('/api/auth/me', { credentials: 'include' });
+  if (response.ok) {
+    throw redirect('/dashboard');
+  }
+  return null;
+}
+
+/**
+ * Client action to handle signup form submission.
+ * Validates all fields, calls Flask's signup endpoint, and redirects on success.
+ *
+ * @param args - Route client action arguments
+ * @returns Action response with errors or server error message
+ */
+export async function clientAction({ request }: Route.ClientActionArgs): Promise<ActionData> {
   const formData = await request.formData();
   const data = Object.fromEntries(formData.entries()) as SignupFormData;
 
-  // Wizard component handles all validation client-side
-  // TODO: Actual account creation logic here
-  console.log('Creating account for:', data.email);
+  const errors = validateForm(data, {
+    firstName: [(v) => validators.required(v, 'First name')],
+    lastName: [(v) => validators.required(v, 'Last name')],
+    email: [(v) => validators.required(v, 'Email'), validators.email],
+    password: [(v) => validators.required(v, 'Password'), (v) => validators.minLength(v, 8)],
+    confirmPassword: [
+      (v) => validators.required(v, 'Confirm password'),
+      validators.confirmPassword,
+    ],
+    street: [(v) => validators.required(v, 'Street address')],
+    city: [(v) => validators.required(v, 'City')],
+    state: [(v) => validators.required(v, 'State')],
+    zipCode: [(v) => validators.required(v, 'Zip code'), validators.zipCode],
+  });
 
-  return { success: true };
+  if (Object.keys(errors).length > 0) {
+    return { errors };
+  }
+
+  try {
+    const response = await fetch('/api/auth/signup', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      }),
+    });
+
+    if (response.status === 201) {
+      const _body: AuthResponse = await response.json();
+      throw redirect('/dashboard');
+    }
+
+    const errorBody = (await response.json()) as ApiError | ApiValidationError;
+    return { serverError: errorBody.error.message };
+  } catch (e) {
+    if (e instanceof Response) throw e;
+    return { serverError: 'Something went wrong. Please try again.' };
+  }
 }
 
 /**

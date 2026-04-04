@@ -36,6 +36,16 @@ export function JoinFormContent() {
 
   return (
     <React.Fragment>
+      {actionData?.serverError && (
+        <div
+          className='mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700'
+          role='alert'
+          aria-live='polite'
+        >
+          {actionData.serverError}
+        </div>
+      )}
+
       <WizardIndicator className='mb-6' />
 
       <WizardStage id={ACCOUNT_CONFIG.id}>

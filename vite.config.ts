@@ -8,6 +8,12 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
     open: false,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
   },
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
 });

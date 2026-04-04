@@ -94,6 +94,7 @@ export function AccountSection({ formData, handleChange, combinedErrors }: Accou
         errorMessage={combinedErrors?.confirmPassword}
         isInvalid={!!combinedErrors?.confirmPassword}
       />
+
     </div>
   );
 }
