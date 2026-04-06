@@ -4,7 +4,7 @@
     "**/.server/**/*",
     "**/.client/**/*",
     ".react-router/types/**/*",
-    "frontend/pages/landing/landing.tsx"
+    "app/pages/landing/landing.tsx"
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
@@ -16,7 +16,7 @@
     "rootDirs": [".", "./.react-router/types"],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["frontend/*"]
+      "~/*": ["app/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

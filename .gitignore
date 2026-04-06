@@ -6,9 +6,6 @@
 /.react-router/
 /build/
 
-/.claude/
-CLAUDE.md
-
 # Python
 __pycache__/
 *.pyc
