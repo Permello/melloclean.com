@@ -11,9 +11,11 @@ __pycache__/
 *.pyc
 
 # Backend
+.venv
 backend/.env
 backend/venv/
 backend/.pytest_cache/
+
 
 .token.json
 .credentials.json
