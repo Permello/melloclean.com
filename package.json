@@ -6,7 +6,7 @@
     "packages/*",
     "apps/*"
   ],
-  "packageManager": "npm@11.6.2",
+  "packageManager": "npm@11.12.1",
   "description": "A responsive and modern website built for my cleaning business",
   "homepage": "https://github.com/permello/melloclean.com#readme",
   "bugs": {
