@@ -1,5 +1,5 @@
 {
-  "name": "melloclean.com",
+  "name": "@permello/client",
   "private": true,
   "type": "module",
   "scripts": {

@@ -1,0 +1,33 @@
+{
+  "name": "melloclean",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "packageManager": "npm@11.6.2",
+  "description": "A responsive and modern website built for my cleaning business",
+  "homepage": "https://github.com/permello/melloclean.com#readme",
+  "bugs": {
+    "url": "https://github.com/permello/melloclean.com/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/permello/melloclean.com.git"
+  },
+  "license": "Copyright (c) 2024 Eduardo Turcios. All rights reserved.",
+  "author": "Eduardo Turcios",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "turbo": "^2.9.6"
+  }
+}
