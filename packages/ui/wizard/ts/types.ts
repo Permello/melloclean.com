@@ -4,7 +4,7 @@
  */
 
 import type { ReactNode } from 'react';
-import type { ValidationErrors, ValidatorFn } from '~/core/util/validation';
+import type { ValidationErrors, ValidatorFn } from '../../util/validation';
 
 /**
  * Configuration for a single wizard stage.
