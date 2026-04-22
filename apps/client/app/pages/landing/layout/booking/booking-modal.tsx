@@ -6,7 +6,13 @@
 import { X } from 'lucide-react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
-import { ModalTrigger, type ModalTriggerProps, Wizard, useWizard, type WizardStageConfig } from '@permello/ui';
+import {
+  ModalTrigger,
+  type ModalTriggerProps,
+  Wizard,
+  useWizard,
+  type WizardStageConfig,
+} from '@permello/ui';
 import { BookingFormContent } from './booking-form-content';
 import {
   BOOKING_STORAGE_KEY,
