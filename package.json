@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/permello/melloclean.com.git"
   },
-  "license": "Copyright (c) 2024 Eduardo Turcios. All rights reserved.",
+  "license": "MIT",
   "author": "Eduardo Turcios",
   "type": "module",
   "main": "index.js",

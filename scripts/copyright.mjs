@@ -1,14 +1,55 @@
 /**
- * @copyright 2026 Eduardo Turcios. All rights reserved.
- * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+ * MIT License
+ *
+ * Copyright (c) 2025-present Eduardo Turcios.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 
-const COPYRIGHT_TS = `/**
- * @copyright 2026 Eduardo Turcios. All rights reserved.
- * Unauthorized use, reproduction, or distribution of this file is strictly prohibited.
+const OLD_COPYRIGHT_RE =
+  /^\/\*\*\n \* @copyright[\s\S]*?\*\/\n/;
+
+const MIT_HEADER = `/**
+ * MIT License
+ *
+ * Copyright (c) 2025-present Eduardo Turcios.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */\n`;
 
 function walk(dir, excludeDirs = []) {
@@ -33,22 +74,30 @@ const packages = walk('packages')
   .filter((f) => /\.(ts|tsx)$/.test(f))
   .filter((f) => !basename(f).includes('config'));
 
+let updated = 0;
 let added = 0;
 let skipped = 0;
 
-writeTS(apps);
-writeTS(packages);
+processFiles(apps);
+processFiles(packages);
 
-function writeTS(tsFiles) {
-  for (const file of tsFiles) {
+console.log(`\nDone: ${updated} replaced, ${added} added, ${skipped} skipped.`);
+
+function processFiles(files) {
+  for (const file of files) {
     const content = readFileSync(file, 'utf-8');
-    if (content.includes('@copyright')) {
+
+    if (OLD_COPYRIGHT_RE.test(content)) {
+      writeFileSync(file, content.replace(OLD_COPYRIGHT_RE, MIT_HEADER));
+      updated++;
+      console.log(`Replaced: ${file}`);
+    } else if (content.includes('MIT License')) {
       skipped++;
-      console.log(`Skipped (already has copyright): ${file}`);
+      console.log(`Skipped (already MIT): ${file}`);
     } else {
-      writeFileSync(file, COPYRIGHT_TS + content);
+      writeFileSync(file, MIT_HEADER + content);
       added++;
-      console.log(`Added copyright: ${file}`);
+      console.log(`Added MIT header: ${file}`);
     }
   }
 }
