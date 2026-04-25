@@ -1,0 +1,94 @@
+name: Bug
+description: Report broken or unintended behavior in a shipped or in-progress feature.
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: "1–3 sentences. What is broken, who it affects, and what the expected behavior is."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1. Step
+        2. Step
+        3. Step
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What should happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happens.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: app
+    attributes:
+      label: App
+      options:
+        - client
+        - dashboard
+        - admin
+        - server
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      placeholder: "e.g. Chrome 123, Firefox 125, Safari 17"
+
+  - type: dropdown
+    id: role
+    attributes:
+      label: Role
+      options:
+        - admin
+        - worker
+        - client
+        - unauthenticated
+
+  - type: dropdown
+    id: reproducible
+    attributes:
+      label: Reproducible
+      options:
+        - Always
+        - Sometimes
+        - Once
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots-logs
+    attributes:
+      label: Screenshots / Logs
+      description: "Paste error messages, stack traces, or screenshots. Omit if not applicable."
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      placeholder: |
+        - [ ] The broken behavior no longer occurs
+        - [ ] Expected behavior is verified end-to-end
+    validations:
+      required: true

@@ -1,0 +1,126 @@
+name: Feature
+description: A single shippable unit of user-facing functionality. One developer, one PR.
+title: "Feature: "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: "1–4 sentences. Who uses this, what core action they take, what the outcome is."
+    validations:
+      required: true
+
+  - type: textarea
+    id: sub-issues
+    attributes:
+      label: Task Sub-Issues
+      description: "Include when this feature has child tasks."
+      placeholder: |
+        | Issue   | Summary        |
+        | ------- | -------------- |
+        | #N      | one sentence   |
+
+        - [ ] Title
+
+  - type: textarea
+    id: decisions
+    attributes:
+      label: Decisions
+      description: "Lock in every meaningful product or technical choice."
+      placeholder: |
+        | Decision | Choice |
+        | -------- | ------ |
+        | topic    | specific, locked-in choice — include rationale when it prevents a question |
+    validations:
+      required: true
+
+  - type: textarea
+    id: files-to-modify
+    attributes:
+      label: Files to Modify
+      description: "Omit when no existing files are touched."
+      placeholder: |
+        | File               | Change         |
+        | ------------------ | -------------- |
+        | `path/to/file.tsx` | what changes   |
+
+  - type: textarea
+    id: files-to-create
+    attributes:
+      label: Files to Create
+      description: "Page files and new UI components in one table."
+      placeholder: |
+        | File                         | Purpose        |
+        | ---------------------------- | -------------- |
+        | `pages/dashboard/<name>.tsx` | one sentence   |
+    validations:
+      required: true
+
+  - type: textarea
+    id: backend-api
+    attributes:
+      label: Backend API Endpoints
+      description: "Single source of truth. Include Auth column — Yes, No, or Yes (ROLE, ROLE)."
+      placeholder: |
+        | Method | Endpoint        | Auth | Description    |
+        | ------ | --------------- | ---- | -------------- |
+        | GET    | /api/<resource> | Yes  | one sentence   |
+    validations:
+      required: true
+
+  - type: textarea
+    id: handlers
+    attributes:
+      label: Handlers
+      description: "Omit for read-only pages. Intent-focused prose — no step tables, no fetch() syntax."
+      placeholder: "**Action Name** — What triggers it, what API call it makes, what happens on success, what happens on failure."
+
+  - type: textarea
+    id: component-details
+    attributes:
+      label: Component Details
+      description: "Data shapes, layout diagrams, and component variants."
+      placeholder: |
+        **Resource data shape**
+
+        | Field   | Type   |
+        | ------- | ------ |
+        | id      | UUID   |
+    validations:
+      required: true
+
+  - type: textarea
+    id: states
+    attributes:
+      label: States
+      description: "Loading, empty, error (API), error (401). Omit states that don't apply."
+      placeholder: |
+        | State       | Behavior                        |
+        | ----------- | ------------------------------- |
+        | Loading     | skeleton / spinner description  |
+        | Empty       | empty state message or CTA      |
+        | Error (API) | banner / toast behavior         |
+        | Error (401) | Redirect to `/login`            |
+    validations:
+      required: true
+
+  - type: textarea
+    id: rbac
+    attributes:
+      label: RBAC
+      description: "1–2 sentences: which roles can access, any ownership scoping."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: "Testable checklist — happy path, enforced constraints, and 401 redirect."
+      placeholder: |
+        - [ ] Happy path works end-to-end
+        - [ ] Constraint enforced
+        - [ ] 401 redirects to `/login`
+    validations:
+      required: true

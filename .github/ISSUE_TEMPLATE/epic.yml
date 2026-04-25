@@ -1,0 +1,73 @@
+name: Epic
+description: A parent issue that groups related features and tracks a workstream.
+title: "[Epic] "
+labels: ["epic"]
+body:
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: "1–4 sentences. What problem this epic solves, who it affects, and what the end state looks like."
+    validations:
+      required: true
+
+  - type: textarea
+    id: phased-implementation
+    attributes:
+      label: Phased Implementation
+      description: "Simple checklist — link each issue with a one-line summary."
+      placeholder: |
+        - **Phase 1 — Name:** What gets built
+          - #N — One sentence
+        - **Phase 2 — Name:** What gets built
+          - #N — One sentence
+    validations:
+      required: true
+
+  - type: textarea
+    id: architecture
+    attributes:
+      label: Architecture
+      description: "4–6 lines max: how the pieces communicate, auth flow, and key constraints. Omit if not needed."
+      placeholder: Describe the flow, not the wiring.
+
+  - type: textarea
+    id: decisions
+    attributes:
+      label: Decisions
+      description: "Product and UX decisions only — no infrastructure or auth implementation details."
+      placeholder: |
+        | Decision | Choice |
+        | -------- | ------ |
+        | topic    | specific, locked-in choice |
+
+  - type: textarea
+    id: new-ui-components
+    attributes:
+      label: New UI Components
+      description: "Only net-new packages/ui additions introduced by this epic. Omit if none."
+      placeholder: |
+        | Component | Purpose |
+        | --------- | ------- |
+        | Name      | one-line purpose |
+
+  - type: textarea
+    id: dependency-graph
+    attributes:
+      label: Dependency Graph
+      description: "Omit when ordering is obvious from the phase list."
+      placeholder: |
+        #N Task
+          └─▶ #N Task
+               └─▶ #N Task
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: "Conditions that mean the epic is fully complete."
+      placeholder: |
+        - [ ] Condition that means the epic is fully done
+        - [ ] All sub-issues closed
+    validations:
+      required: true

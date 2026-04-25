@@ -1,0 +1,40 @@
+name: Task
+description: A unit of technical work with no direct user-facing outcome. Backend setup, migrations, infrastructure, tooling.
+title: "[Task] "
+labels: ["task"]
+body:
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: "1–4 sentences. What technical problem this solves and why it's needed."
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: "One sentence — the concrete deliverable when this task is done."
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-to-do
+    attributes:
+      label: What to Do
+      placeholder: |
+        - Step or action
+        - Step or action
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      placeholder: |
+        - [ ] Specific, verifiable condition
+        - [ ] Another condition
+    validations:
+      required: true
