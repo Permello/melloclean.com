@@ -127,6 +127,30 @@
       color: #15803D;
     }
 
+    /* ── CTA button ─────────────────────────────────────────── */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #15803D;
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      width: 100%;
+      justify-content: center;
+      box-shadow: 0 4px 18px rgba(21, 128, 61, 0.35);
+      letter-spacing: 0.01em;
+    }
+
+    .cta-arrow {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
     /* ── Screenshot panel ────────────────────────────────────── */
     .screenshot-panel {
       flex-shrink: 0;
@@ -307,6 +331,13 @@
           <span class="check-label">Role-Based Access Control</span>
         </div>
       </div>
+
+      <a class="cta-btn" href="https://melloclean.com" target="_blank" rel="noopener">
+        Click me for a demo
+        <svg class="cta-arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 10h12M11 5l5 5-5 5"/>
+        </svg>
+      </a>
     </div>
   </div>
 
